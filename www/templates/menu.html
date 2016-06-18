@@ -3,11 +3,30 @@
   <button class="button button-clear">
     <i class=" ion-person"></i>
   </button>
-  
+
 </ion-header-bar>
 
- 
-<div class="tabs-top tabs-background-balanced tabs-color-light">
+<ion-tabs class="tabs-top tabs-color-light tabs-background-balanced">
+
+  <!-- Courses Tab -->
+  <ion-tab title="Status" icon-off="ion-ios-book-outline" icon-on="ion-ios-book" href="#/app/courses">
+    <ion-nav-view name="courses">
+    </ion-nav-view>
+  </ion-tab>
+
+  <!-- Badges Tab -->
+  <ion-tab title="Chats" icon-off="ion-ios-star-outline" icon-on="ion-ios-star" href="#/tab/chats">
+    <ion-nav-view name="tab-chats">
+      <ion-content>
+
+      </ion-content>
+    </ion-nav-view>
+  </ion-tab>
+
+</ion-tabs>
+
+
+<!-- <div class="tabs-top tabs-background-balanced tabs-color-light">
     <div class="tabs">
 
       <a class="tab-item active" href="#/app/courses">
@@ -18,9 +37,9 @@
         <i class="icon ion-star"></i>
         Favorites
       </a>
-    
+
     </div>
-  </div> 
+  </div>  -->
 
 
 <!-- <ion-side-menus enable-menu-with-back-views="false">
