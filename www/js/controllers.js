@@ -1,17 +1,17 @@
-angular.module('starter.controllers', [])
+angular.module('mooc.controllers', [])
 
-.controller('AppCtrl', function($scope, $ionicModal, $timeout) {})
+.controller('AppCtrl', function() {})
 
-.controller('PlaylistsCtrl', function($scope) {
-  $scope.playlists = [
-    { title: 'Reggae', id: 1 },
-    { title: 'Chill', id: 2 },
-    { title: 'Dubstep', id: 3 },
-    { title: 'Indie', id: 4 },
-    { title: 'Rap', id: 5 },
-    { title: 'Cowbell', id: 6 }
+.controller('CoursesCtrl', function($scope) {
+  $scope.courses = [
+    { title: 'Algoritmia I', id: 1 },
+    { title: 'Programación Orientada a Objetos', id: 2 },
+    { title: 'Programación Funcional', id: 3 },
+    { title: 'Desarrollo móvil iOS', id: 4 },
+    { title: 'Desarrollo móvil Android', id: 5 },
+    { title: 'Desarrollo web con AngularJS', id: 6 }
   ];
 })
 
-.controller('PlaylistCtrl', function($scope, $stateParams) {
+.controller('CourseCtrl', function($scope, $stateParams) {
 });
