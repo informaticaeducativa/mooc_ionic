@@ -8,6 +8,7 @@ angular.module('mooc.controllers', [])
     $http.get('http://informaticaeducativaucc.com/api/cursos')
       .then(function(successResponse){
         $scope.courses = successResponse.data;
+        console.log(successResponse.data);
       }, function(errorResponse){
         $scope.error = errorResponse;
     });
