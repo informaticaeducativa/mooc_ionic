@@ -1,12 +1,12 @@
 <ion-view view-title="Cursos">
   <ion-content>
     <ion-list>
-      <ion-item class="item item-thumbnail-left" ng-repeat="course in courses" href="#/app/courses/{{course.id_curso}}">
+      <ion-item class="item item-thumbnail" ng-repeat="course in courses" href="#/app/courses/{{course.id_curso}}">
         <div class="list">
 
-            <img ng-src="http://informaticaeducativaucc.com/imagenes/{{ course.imagen_presentacion }}" width="2em">
+            <img ng-src="http://informaticaeducativaucc.com/imagenes/{{ course.imagen_presentacion }}" width="200px">
             <h2>{{course.nombre}}</h2>
-            <h4>{{course.id_tematica}}</h4>
+            <h4>{{course.nombre_tematica}}</h4>
           </a>
 
 
