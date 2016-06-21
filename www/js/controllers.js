@@ -4,15 +4,15 @@ angular.module('mooc.controllers', [])
 
 .controller('CoursesCtrl', function($scope, $http) {
 
-  $scope.courses = [];
-    $http.get('http://informaticaeducativaucc.com/api/cursos')
-      .then(function(successResponse){
-        $scope.courses = successResponse.data;
-        console.log(successResponse.data);
-      }, function(errorResponse){
-        $scope.error = errorResponse;
-    });
-})
+  // $scope.courses = [];
+  //   $http.get('http://informaticaeducativaucc.com/api/cursos')
+  //     .then(function(successResponse){
+  //       $scope.courses = successResponse.data;
+  //       console.log(successResponse.data);
+  //     }, function(errorResponse){
+  //       $scope.error = errorResponse;
+  //   });
+});
 
 //   $scope.courses = [
 //     { title: 'Algoritmia I', id: 1 },
@@ -24,4 +24,15 @@ angular.module('mooc.controllers', [])
 //   ];
 // })
 
-.controller('CourseCtrl', function($scope, $stateParams) {});
+// .controller('CourseCtrl', function($scope, $stateParams) {
+
+// 	$scope.courses = [];
+// 	    $http.get('http://informaticaeducativaucc.com/api/cursos')
+// 	      .then(function(successResponse){
+// 	        $scope.courses = successResponse.data;
+// 	        console.log(successResponse.data);
+// 	    }, function(errorResponse){
+// 	        $scope.error = errorResponse;
+//     });
+
+// });
