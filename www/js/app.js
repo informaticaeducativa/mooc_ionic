@@ -1,5 +1,5 @@
 
-angular.module('mooc', ['ionic', 'mooc.controllers', 'mooc.services'])
+angular.module('mooc', ['ionic', 'mooc.controllers'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -60,6 +60,8 @@ angular.module('mooc', ['ionic', 'mooc.controllers', 'mooc.services'])
       }
     }
   });
+
+
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/app/courses');
 });
