@@ -23,20 +23,25 @@ angular.module('mooc.controllers', [])
 //   $scope.course = Courses.get($stateParams.courseId);
 // });
 
- .controller('CoursesCtrl', ['$scope', '$http', function($scope, $http) {
-     $http.get('http://informaticaeducativaucc.com/api/cursos').success(function(data) {
-         console.log(data);
-         $scope.courses = data;
-     });
+.controller('CoursesCtrl', ['$scope', '$http', function($scope, $http) {
+  $scope.courses = [];
+  $http.get('http://informaticaeducativaucc.com/api/cursos').success(function(data) {
+    console.log(data);
+    $scope.courses = data;
+  });
 }])
 
 
-.controller('CourseCtrl', ['$scope', '$stateParams',
-    function($scope, $stateParams)
-    {   
-    	console.log($stateParams.courseId);
-        $scope.courseId = $stateParams.courseId;
-    }
+.controller('CourseCtrl', ['$scope', '$stateParams', '$http', function($scope, $stateParams, $http) {
+
+  $scope.courseId = $stateParams.courseId;
+  console.log($scope.courseId);
+  $scope.fuck = [];
+  $http.get('http://informaticaeducativaucc.com/api/curso/'+$scope.courseId).success(function(data) {
+    console.log(data);
+    $scope.fuck = data;
+  });
+}
 ]);
 
 //   $scope.courses = [
