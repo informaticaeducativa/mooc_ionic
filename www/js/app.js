@@ -1,5 +1,5 @@
 
-angular.module('mooc', ['ionic', 'mooc.controllers'])
+angular.module('mooc', ['ionic', 'mooc.controllers', 'mooc.services'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -54,7 +54,7 @@ angular.module('mooc', ['ionic', 'mooc.controllers'])
   .state('app.course', {
     url: '/courses/:courseId',
     views: {
-      'menuContent': {
+      'courses': {
         templateUrl: 'templates/course.html',
         controller: 'CourseCtrl'
       }

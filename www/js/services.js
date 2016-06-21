@@ -1,16 +1,16 @@
 angular.module('mooc.services', [])
 
-.factory('Courses', function() {
+.factory('Courses', function($http) {
   // Might use a resource here that returns a JSON array
 
   // Some fake testing data
-  $scope.courses = [];
+  var courses = [];
     $http.get('http://informaticaeducativaucc.com/api/cursos')
       .then(function(successResponse){
-        $scope.courses = successResponse.data;
+        courses = successResponse.data;
         console.log(successResponse.data);
       }, function(errorResponse){
-        $scope.error = errorResponse;
+        error = errorResponse;
     });
 
   return {

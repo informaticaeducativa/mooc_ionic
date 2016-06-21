@@ -2,7 +2,12 @@ angular.module('mooc.controllers', [])
 
 .controller('AppCtrl', function() {})
 
-.controller('CoursesCtrl', function($scope, $http) {
+.controller('CoursesCtrl', function($scope, Courses) {
+
+	$scope.courses = Courses.all();
+	// $scope.remove = function(course) {
+	// 	Courses.remove(course);
+	// };
 
   // $scope.courses = [];
   //   $http.get('http://informaticaeducativaucc.com/api/cursos')
@@ -12,6 +17,10 @@ angular.module('mooc.controllers', [])
   //     }, function(errorResponse){
   //       $scope.error = errorResponse;
   //   });
+})
+
+.controller('CourseCtrl', function($scope, $stateParams, Courses) {
+  $scope.course = Courses.get($stateParams.courseId);
 });
 
 //   $scope.courses = [
