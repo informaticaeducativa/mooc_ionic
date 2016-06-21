@@ -23,26 +23,29 @@ angular.module('mooc.controllers', [])
 //   $scope.course = Courses.get($stateParams.courseId);
 // });
 
-.controller('CoursesCtrl', ['$scope', '$http', function($scope, $http) {
+.controller('CoursesCtrl', function($scope, $http) {
   $scope.courses = [];
-  $http.get('http://informaticaeducativaucc.com/api/cursos').success(function(data) {
-    console.log(data);
-    $scope.courses = data;
-  });
-}])
+  $http.get('http://informaticaeducativaucc.com/api/cursos').then(function(successResponse) {
+    console.log(successResponse.data);
+    $scope.courses = successResponse.data;
+  }, function(errorResponse){
+     $scope.error = errorResponse;
+   });
+})
 
 
-.controller('CourseCtrl', ['$scope', '$stateParams', '$http', function($scope, $stateParams, $http) {
+.controller('CourseDetailCtrl', function($scope, $stateParams, $http) {
 
   $scope.courseId = $stateParams.courseId;
   console.log($scope.courseId);
-  $scope.fuck = [];
-  $http.get('http://informaticaeducativaucc.com/api/curso/'+$scope.courseId).success(function(data) {
-    console.log(data);
-    $scope.fuck = data;
-  });
-}
-]);
+  $scope.course = [];
+  $http.get('http://informaticaeducativaucc.com/api/curso/'+$scope.courseId).then(function(successResponse) {
+    console.log(successResponse.data);
+    $scope.course = successResponse.data;
+  }, function(errorResponse){
+     $scope.error = errorResponse;
+   });
+});
 
 //   $scope.courses = [
 //     { title: 'Algoritmia I', id: 1 },

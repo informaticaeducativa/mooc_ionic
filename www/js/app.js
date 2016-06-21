@@ -56,7 +56,7 @@ angular.module('mooc', ['ionic', 'mooc.controllers'])
     views: {
       'courses': {
         templateUrl: 'templates/course.html',
-        controller: 'CourseCtrl'
+        controller: 'CourseDetailCtrl'
       }
     }
   });
