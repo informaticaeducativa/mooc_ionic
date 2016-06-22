@@ -2,3 +2,7 @@
 /*.header-size {
 	height: 4em !important;
 }*/
+
+.view-container {
+	position: static;
+}
