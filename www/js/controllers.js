@@ -31,7 +31,17 @@ angular.module('mooc.controllers', [])
   //  });
 })
 
-.controller('CourseDetailCtrl', function($scope, $stateParams, CoursesService) {
+.controller('CourseDetailCtrl', function($scope, $stateParams, CoursesService, $ionicHistory) {
+    $scope.goBack = function() {
+    console.log('Going back');
+
+    // This will show you the history stuff.
+    // var history = $ionicHistory.goBack();
+    // console.log(history);
+    
+    $ionicHistory.goBack();
+    
+  }
   console.log($stateParams.courseId);
   CoursesService.get($stateParams.courseId).then(function(successResponse) {
     $scope.course = successResponse;

@@ -1,9 +1,10 @@
 <ion-header-bar class="bar bar-subheader bar-stable">
+	<button class="ion-chevron-left" ng-click="goBack()"></button>
+
   <h1 class="title">{{course.nombre}}</h1>
-  <ion-nav-back-button></ion-nav-back-button>
 </ion-header-bar>
 <ion-view view-title="{{course.nombre}}" >
-  <ion-content>
+  <ion-content class="has-subheader">
     <img ng-src="http://informaticaeducativaucc.com/imagenes/{{ course.imagen_presentacion }}" width="100%">
   </ion-content>
 </ion-view>
