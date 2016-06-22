@@ -21,7 +21,7 @@ angular.module('mooc', ['ionic', 'mooc.controllers'])
   .state('app', {
     url: '/app',
     abstract: true,
-    templateUrl: 'templates/tabs.html'
+    templateUrl: 'templates/menu.html'
   })
 
   // .state('app.search', {
@@ -44,7 +44,7 @@ angular.module('mooc', ['ionic', 'mooc.controllers'])
     .state('app.courses', {
       url: '/courses',
       views: {
-        'courses': {
+        'menuContent': {
           templateUrl: 'templates/courses.html',
           controller: 'CoursesCtrl'
         }

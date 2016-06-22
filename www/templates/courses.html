@@ -1,14 +1,48 @@
-<ion-view view-title="Cursos">
-  <ion-content>
-    <ion-list>
-      <ion-item class="item item-thumbnail" ng-repeat="course in courses" href="#/app/courses/{{course.id_curso}}">
-        <div class="list">
+<ion-tabs class="tabs-top tabs-color-light tabs-background-balanced">
 
-          <img ng-src="http://informaticaeducativaucc.com/imagenes/{{ course.imagen_presentacion }}" width="200px">
-          <h2>{{course.nombre}}</h2>
-          <h4>{{course.nombre_tematica}}</h4>
+  <!-- Courses Tab -->
+  <ion-tab title="Courses" icon-off="ion-ios-book-outline" icon-on="ion-ios-book" href="#/app/courses">
+    <ion-nav-view name="courses">
+              <ion-content>
+          <ion-list>
+            asf
 
-        </ion-item>
-      </ion-list>
-    </ion-content>
-  </ion-view>
+              </ion-item>
+            </ion-list>
+          </ion-content>
+
+    </ion-nav-view>
+  </ion-tab>
+
+  <!-- Badges Tab -->
+  <ion-tab title="Badges" icon-off="ion-ios-star-outline" icon-on="ion-ios-star" href="#/tab/chats">
+    <ion-nav-view name="badges">
+      <ion-content>
+      </ion-content>
+    </ion-nav-view>
+  </ion-tab>
+
+</ion-tabs>
+
+
+<!-- <ion-tabs class="tabs-top tabs-color-light tabs-background-balanced" >
+
+  <ion-tab title="Courses" icon-off="ion-ios-book-outline" icon-on="ion-ios-book" href="#/app/courses">
+      <ion-nav-view view-title="Cursos">
+        
+      </ion-view>
+    </ion-nav-view>
+  </ion-tab>
+
+  <ion-tab title="Badges" icon-off="ion-ios-star-outline" icon-on="ion-ios-star" href="#/app/badges">
+    <ion-nav-view name="badges">
+      <ion-content>
+      <h1>asdsad</h1>
+      </ion-content>
+    </ion-nav-view>
+  </ion-tab>
+
+</ion-tabs> -->
+
+
+
