@@ -1,30 +1,35 @@
 angular.module('mooc.services', [])
-
 .factory('CoursesService', function($http) {
 
-  var courses = [];
-    $http.get('http://informaticaeducativaucc.com/api/cursos')
-      .then(function(successResponse){
-        courses = successResponse.data;
-        console.log(successResponse.data);
-      }, function(errorResponse){
-        error = errorResponse;
-    });
+  var apiUrl = 'http://informaticaeducativaucc.com/api';
 
   return {
-    all: function() {
-      return courses;
+
+    list: function() {
+      return $http.get(apiUrl + '/cursos/').then(function(response) {
+        return response.data;
+      });
     },
-    remove: function(course) {
-      courses.splice(courses.indexOf(course), 1);
-    },
+
     get: function(courseId) {
-      for (var i = 0; i < courses.length; i++) {
-        if (courses[i].id_curso === parseInt(courseId)) {
-          return courses[i];
-        }
-      }
-      return null;
+      return $http.get(apiUrl + '/curso/' + courseId)
+      .then(function(response) {
+        return response.data[0];
+      });
     }
+
+    // create: function(note) {
+    //   return $http.post(apiUrl + '/cursos/', note);
+    // },
+    //
+    // update: function(note) {
+    //   return $http.put(apiUrl + '/cursos/' + note.id, note);
+    // },
+    //
+    // remove: function(noteId) {
+    //   return $http.delete(apiUrl + '/cursos/' + noteId);
+    // }
+
   };
+
 });
