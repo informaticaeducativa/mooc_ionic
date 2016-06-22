@@ -1,9 +1,7 @@
 angular.module('mooc.services', [])
 
-.factory('Courses', function($http) {
-  // Might use a resource here that returns a JSON array
+.factory('CoursesService', function($http) {
 
-  // Some fake testing data
   var courses = [];
     $http.get('http://informaticaeducativaucc.com/api/cursos')
       .then(function(successResponse){
@@ -22,7 +20,7 @@ angular.module('mooc.services', [])
     },
     get: function(courseId) {
       for (var i = 0; i < courses.length; i++) {
-        if (courses[i].id === parseInt(courseId)) {
+        if (courses[i].id_curso === parseInt(courseId)) {
           return courses[i];
         }
       }
