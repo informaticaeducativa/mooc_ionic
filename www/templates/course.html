@@ -1,5 +1,19 @@
 <ion-view view-title="{{course.nombre}}" >
   <ion-content>
-    <img ng-src="http://informaticaeducativaucc.com/imagenes/{{ course.imagen_presentacion }}" width="100%">
+
+	<div class="card">
+
+		<div class="item item-text-wrap">
+			<img ng-src="http://informaticaeducativaucc.com/imagenes/{{ course.imagen_presentacion }}" width="100%">
+	    	<h2>{{course.nombre}}</h2>
+	    	<p><span class="strong">Duración:</span> {{course.duracion}} | 
+	    	<span class="strong">Precio: </span>{{course.precio}}</p>
+	    	<p><span class="strong">Temática:</span> {{course.nombre_tematica}}</p>
+	    	<p><span class="strong">Nivel:</span> {{course.nivel}}</p>
+	    	<p><span class="strong">Pre requisitos:</span> {{course.prerrequisitos}}</p>
+		</div>
+
+	</div>
+
   </ion-content>
 </ion-view>
