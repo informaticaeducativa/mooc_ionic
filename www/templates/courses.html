@@ -5,7 +5,13 @@
     <ion-nav-view name="courses">
               <ion-content>
           <ion-list>
-            asf
+            <ion-item class="item item-thumbnail" 
+            ng-repeat="course in courses" href="#/app/courses/{{course.id_curso}}">
+              <div class="list">
+
+                <img ng-src="http://informaticaeducativaucc.com/imagenes/{{ course.imagen_presentacion }}" width="200px">
+                <h2>{{course.nombre}}</h2>
+                <h4>{{course.nombre_tematica}}</h4>
 
               </ion-item>
             </ion-list>
