@@ -6,3 +6,11 @@
 /*.view-container {
 	position: static;
 }*/
+
+.login-btn {
+	position: fixed;
+}
+
+.strong {
+	font-weight: bold;
+}
