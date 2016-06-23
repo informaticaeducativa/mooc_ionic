@@ -1,5 +1,5 @@
 
-angular.module('mooc', ['ionic', 'mooc.controllers', 'mooc.services'])
+angular.module('mooc', ['ionic', 'mooc.controllers', 'mooc.services', 'satellizer'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -15,13 +15,30 @@ angular.module('mooc', ['ionic', 'mooc.controllers', 'mooc.services'])
   });
 })
 
-.config(function($stateProvider, $urlRouterProvider) {
+.config(function($stateProvider, $urlRouterProvider, $authProvider) {
+
+  $authProvider.facebook({
+    clientId: '1580733465558680',
+    url: 'http://informaticaeducativaucc.com/login-facebook',
+    responseType: 'token'
+  });
+
   $stateProvider
 
   .state('app', {
     url: '/app',
     abstract: true,
     templateUrl: 'templates/menu.html'
+  })
+
+  .state('app.login', {
+    url: '/login',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/login.html',
+        controller: 'LoginCtrl'
+      }
+    }
   })
 
   // .state('app.search', {

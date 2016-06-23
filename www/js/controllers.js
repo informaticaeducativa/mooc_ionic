@@ -1,6 +1,6 @@
 angular.module('mooc.controllers', [])
 
-.controller('AppCtrl', function() {})
+.controller('AppCtrl', function() {}) 
 
 // .controller('CoursesCtrl', function($scope, $http) {
 //   $scope.courses = [];
@@ -14,11 +14,17 @@ angular.module('mooc.controllers', [])
 
 .controller('CoursesCtrl', function($scope, CoursesService) {
 
+  
+
   function refreshCourses() {
+    $scope.loading = true;
     CoursesService.list().then(function(successResponse) {
       $scope.courses = successResponse;
       console.log($scope.courses);
-    });
+    }).finally(function() {
+        // called no matter success or failure
+        $scope.loading = false;
+      });
   }
   refreshCourses();
 
@@ -37,6 +43,32 @@ angular.module('mooc.controllers', [])
     $scope.course = successResponse;
     console.log(successResponse);
   });
+
+})
+
+.controller('LoginCtrl', function($scope, $auth, $ionicModal, $timeout) {
+   // Form data for the login modal
+
+  // Create the login modal that we will use later
+  $ionicModal.fromTemplateUrl('templates/login.html', {
+    scope: $scope
+  }).then(function(modal) {
+    $scope.modal = modal;
+  });
+
+  
+
+  $scope.authenticate = function(provider) {
+    $auth.authenticate(provider)
+    .then(function(response) {
+      console.log('Signed in with facebook');
+    })
+    .catch(function(response) {
+      console.log('Something went wrong.');
+    });
+
+
+  };
 
 });
 

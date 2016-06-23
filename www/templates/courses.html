@@ -1,6 +1,7 @@
  <ion-view view-title="Cursos">
       <ion-content>
         <ion-list>
+          <ion-spinner ng-show="loading"></ion-spinner>
           <ion-item class="item item-thumbnail"
           ng-repeat="course in courses" href="#/app/courses/{{course.id_curso}}">
             <div class="list">
