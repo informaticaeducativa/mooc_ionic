@@ -46,7 +46,7 @@ angular.module('mooc.controllers', [])
 
 })
 
-.controller('LoginCtrl', function($scope, $auth, $ionicModal, $timeout, $ionicPopup) {
+.controller('LoginCtrl', function($scope, auth, $state, store, $ionicModal) {
    // Form data for the login modal
 
   // Create the login modal that we will use later
@@ -56,62 +56,58 @@ angular.module('mooc.controllers', [])
     $scope.modal = modal;
   });
 
+  function doAuth() {
+    auth.signin({
+      closable: false,
+      // This asks for the refresh token
+      // So that the user never has to log in again
+      authParams: {
+        scope: 'openid offline_access'
+      }
+    }, function(profile, idToken, accessToken, state, refreshToken) {
+      store.set('profile', profile);
+      store.set('token', idToken);
+      store.set('refreshToken', refreshToken);
+      $state.go('tab.dash');
+    }, function(error) {
+      console.log("There was an error logging in", error);
+    });
+  }
+
+  $scope.$on('$ionic.reconnectScope', function() {
+    doAuth();
+  });
+
+  doAuth();
+
+
 
 
   // $scope.authenticate = function(provider) {
   //   $auth.authenticate(provider)
-  //   .then(function(response) {
-  //     console.log('Signed in with facebook');
-  //   })
-  //   .catch(function(response) {
-  //     console.log('Something went wrong.');
-  //   });
-  //
-  //   $scope.isAuthenticated = function() {
-  //     return $auth.isAuthenticated();
-  //     console.log($auth.isAuthenticated());
-  //   };
-  //
-  //
+  //     .then(function() {
+  //       $ionicPopup.alert({
+  //         title: 'Success',
+  //         content: 'You have successfully logged in!'
+  //       })
+  //     })
+  //     .catch(function(response) {
+  //       $ionicPopup.alert({
+  //         title: 'Error',
+  //         content: response.data ? response.data || response.data.message : response
+  //       })
+
+  //     });
   // };
 
-  $scope.authenticate = function(provider) {
-    $auth.authenticate(provider)
-      .then(function() {
-        $ionicPopup.alert({
-          title: 'Success',
-          content: 'You have successfully logged in!'
-        })
-      })
-      .catch(function(response) {
-        $ionicPopup.alert({
-          title: 'Error',
-          content: response.data ? response.data || response.data.message : response
-        })
 
-      });
-  };
+  // $scope.logout = function() {
+  //   $auth.logout();
+  // };
 
-
-  $scope.logout = function() {
-    $auth.logout();
-  };
-
-  $scope.isAuthenticated = function() {
-    return $auth.isAuthenticated();
-  };
+  // $scope.isAuthenticated = function() {
+  //   return $auth.isAuthenticated();
+  // };
 
 });
 
-// .controller('CourseDetailCtrl', function($scope, $stateParams, $http) {
-//   $scope.courseId = $stateParams.courseId;
-//   console.log($scope.courseId);
-//   $scope.course = [];
-//   $http.get('http://informaticaeducativaucc.com/api/curso/'+$scope.courseId)
-//   .then(function(successResponse) {
-//     //console.log(successResponse.data);
-//     $scope.course = successResponse.data[0];
-//   }, function(errorResponse){
-//      $scope.error = errorResponse;
-//    });
-// });
