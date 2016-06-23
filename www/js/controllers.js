@@ -1,6 +1,6 @@
 angular.module('mooc.controllers', [])
 
-.controller('AppCtrl', function() {}) 
+.controller('AppCtrl', function() {})
 
 // .controller('CoursesCtrl', function($scope, $http) {
 //   $scope.courses = [];
@@ -14,7 +14,7 @@ angular.module('mooc.controllers', [])
 
 .controller('CoursesCtrl', function($scope, CoursesService) {
 
-  
+
 
   function refreshCourses() {
     $scope.loading = true;
@@ -46,7 +46,7 @@ angular.module('mooc.controllers', [])
 
 })
 
-.controller('LoginCtrl', function($scope, $auth, $ionicModal, $timeout) {
+.controller('LoginCtrl', function($scope, $auth, $ionicModal, $timeout, $ionicPopup) {
    // Form data for the login modal
 
   // Create the login modal that we will use later
@@ -56,55 +56,52 @@ angular.module('mooc.controllers', [])
     $scope.modal = modal;
   });
 
-  
+
+
+  // $scope.authenticate = function(provider) {
+  //   $auth.authenticate(provider)
+  //   .then(function(response) {
+  //     console.log('Signed in with facebook');
+  //   })
+  //   .catch(function(response) {
+  //     console.log('Something went wrong.');
+  //   });
+  //
+  //   $scope.isAuthenticated = function() {
+  //     return $auth.isAuthenticated();
+  //     console.log($auth.isAuthenticated());
+  //   };
+  //
+  //
+  // };
 
   $scope.authenticate = function(provider) {
     $auth.authenticate(provider)
-    .then(function(response) {
-      console.log('Signed in with facebook');
-    })
-    .catch(function(response) {
-      console.log('Something went wrong.');
-    });
+      .then(function() {
+        $ionicPopup.alert({
+          title: 'Success',
+          content: 'You have successfully logged in!'
+        })
+      })
+      .catch(function(response) {
+        $ionicPopup.alert({
+          title: 'Error',
+          content: response.data ? response.data || response.data.message : response
+        })
 
-    $scope.isAuthenticated = function() {
-      return $auth.isAuthenticated();
-      console.log($auth.isAuthenticated());
-    };
-
-
+      });
   };
 
-})
 
-.controller('HomeCtrl', function($scope, $ionicPopup, $auth) {
+  $scope.logout = function() {
+    $auth.logout();
+  };
 
-    $scope.authenticate = function(provider) {
-      $auth.authenticate(provider)
-        .then(function() {
-          $ionicPopup.alert({
-            title: 'Success',
-            content: 'You have successfully logged in!'
-          })
-        })
-        .catch(function(response) {
-          $ionicPopup.alert({
-            title: 'Error',
-            content: response.data ? response.data || response.data.message : response
-          })
+  $scope.isAuthenticated = function() {
+    return $auth.isAuthenticated();
+  };
 
-        });
-    };
-
-
-    $scope.logout = function() {
-      $auth.logout();
-    };
-
-    $scope.isAuthenticated = function() {
-      return $auth.isAuthenticated();
-    };
-  });
+});
 
 // .controller('CourseDetailCtrl', function($scope, $stateParams, $http) {
 //   $scope.courseId = $stateParams.courseId;

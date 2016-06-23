@@ -15,18 +15,49 @@ angular.module('mooc', ['ionic', 'mooc.controllers', 'mooc.services', 'satellize
   });
 })
 
-.config(function($stateProvider, $urlRouterProvider, $authProvider) {
+.config(function($authProvider) {
+  var commonConfig = {
+    popupOptions: {
+      location: 'no',
+      toolbar: 'yes',
+      width: window.screen.width,
+      height: window.screen.height
+    }
+  };
 
-  $authProvider.facebook({
+  if (ionic.Platform.isIOS() || ionic.Platform.isAndroid()) {
+    commonConfig.redirectUri = 'http://localhost';
+  }
+
+  $authProvider.storageType = 'localStorage';
+
+  $authProvider.facebook(angular.extend({}, commonConfig, {
     clientId: '1580733465558680',
-    url: 'http://informaticaeducativaucc.com/login-facebook',
-    responseType: 'token'
-  });
+    url: 'http://informaticaeducativaucc.com/login-facebook'
+  }));
 
-  $authProvider.google({
+  $authProvider.twitter(angular.extend({}, commonConfig, {
+    url: 'http://localhost:3000/auth/twitter'
+  }));
+
+  $authProvider.google(angular.extend({}, commonConfig, {
     clientId: '1008466316631-0t9ugiltj87a3jl7tsksggi2ipp9b1nt.apps.googleusercontent.com',
     url: 'http://informaticaeducativaucc.com/login-google'
-  });
+  }));
+})
+
+.config(function($stateProvider, $urlRouterProvider) {
+
+  // $authProvider.facebook({
+  //   clientId: '1580733465558680',
+  //   url: 'http://informaticaeducativaucc.com/login-facebook',
+  //   responseType: 'token'
+  // });
+  //
+  // $authProvider.google({
+  //   clientId: '1008466316631-0t9ugiltj87a3jl7tsksggi2ipp9b1nt.apps.googleusercontent.com',
+  //   url: 'http://informaticaeducativaucc.com/login-google'
+  // });
 
   $stateProvider
 
