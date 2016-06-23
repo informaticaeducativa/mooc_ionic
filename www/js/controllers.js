@@ -67,10 +67,44 @@ angular.module('mooc.controllers', [])
       console.log('Something went wrong.');
     });
 
+    $scope.isAuthenticated = function() {
+      return $auth.isAuthenticated();
+      console.log($auth.isAuthenticated());
+    };
+
 
   };
 
-});
+})
+
+.controller('HomeCtrl', function($scope, $ionicPopup, $auth) {
+
+    $scope.authenticate = function(provider) {
+      $auth.authenticate(provider)
+        .then(function() {
+          $ionicPopup.alert({
+            title: 'Success',
+            content: 'You have successfully logged in!'
+          })
+        })
+        .catch(function(response) {
+          $ionicPopup.alert({
+            title: 'Error',
+            content: response.data ? response.data || response.data.message : response
+          })
+
+        });
+    };
+
+
+    $scope.logout = function() {
+      $auth.logout();
+    };
+
+    $scope.isAuthenticated = function() {
+      return $auth.isAuthenticated();
+    };
+  });
 
 // .controller('CourseDetailCtrl', function($scope, $stateParams, $http) {
 //   $scope.courseId = $stateParams.courseId;

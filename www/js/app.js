@@ -23,6 +23,11 @@ angular.module('mooc', ['ionic', 'mooc.controllers', 'mooc.services', 'satellize
     responseType: 'token'
   });
 
+  $authProvider.google({
+    clientId: '1008466316631-0t9ugiltj87a3jl7tsksggi2ipp9b1nt.apps.googleusercontent.com',
+    url: 'http://informaticaeducativaucc.com/login-google'
+  });
+
   $stateProvider
 
   .state('app', {
