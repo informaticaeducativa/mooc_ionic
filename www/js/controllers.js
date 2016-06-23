@@ -2,39 +2,22 @@ angular.module('mooc.controllers', [])
 
 .controller('AppCtrl', function() {})
 
-// .controller('CoursesCtrl', function($scope, $http) {
-//   $scope.courses = [];
-//   $http.get('http://informaticaeducativaucc.com/api/cursos').then(function(successResponse) {
-//     console.log(successResponse.data);
-//     $scope.courses = successResponse.data;
-//   }, function(errorResponse){
-//      $scope.error = errorResponse;
-//    });
-// })
-
 .controller('CoursesCtrl', function($scope, CoursesService) {
 
 
-
   function refreshCourses() {
+    // For spinner's loading control
     $scope.loading = true;
     CoursesService.list().then(function(successResponse) {
       $scope.courses = successResponse;
       console.log($scope.courses);
     }).finally(function() {
-        // called no matter success or failure
+        // after request is done, spinner will disappear
         $scope.loading = false;
       });
   }
   refreshCourses();
 
-  // $scope.courses = [];
-  // $http.get('http://informaticaeducativaucc.com/api/cursos').then(function(successResponse) {
-  //   console.log(successResponse.data);
-  //   $scope.courses = successResponse.data;
-  // }, function(errorResponse){
-  //    $scope.error = errorResponse;
-  //  });
 })
 
 .controller('CourseDetailCtrl', function($scope, $stateParams, CoursesService) {
@@ -79,35 +62,6 @@ angular.module('mooc.controllers', [])
   });
 
   doAuth();
-
-
-
-
-  // $scope.authenticate = function(provider) {
-  //   $auth.authenticate(provider)
-  //     .then(function() {
-  //       $ionicPopup.alert({
-  //         title: 'Success',
-  //         content: 'You have successfully logged in!'
-  //       })
-  //     })
-  //     .catch(function(response) {
-  //       $ionicPopup.alert({
-  //         title: 'Error',
-  //         content: response.data ? response.data || response.data.message : response
-  //       })
-
-  //     });
-  // };
-
-
-  // $scope.logout = function() {
-  //   $auth.logout();
-  // };
-
-  // $scope.isAuthenticated = function() {
-  //   return $auth.isAuthenticated();
-  // };
 
 });
 
