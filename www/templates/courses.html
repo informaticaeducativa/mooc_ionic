@@ -1,6 +1,10 @@
  <ion-view view-title="Cursos">
       <ion-content>
         <ion-list>
+        <h1>Tu ID es: {{auth.profile.identities[0].user_id}}</h1>
+        <button class="button button-positive button-block" ng-click="logout()">
+          Logout
+        </button>
           <ion-spinner ng-show="loading"></ion-spinner>
           <ion-item class="item item-thumbnail"
           ng-repeat="course in courses" href="#/app/courses/{{course.id_curso}}">

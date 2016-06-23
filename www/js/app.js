@@ -26,9 +26,9 @@ angular.module('mooc', ['ionic', 'mooc.controllers', 'mooc.services',
     url: '/app',
     abstract: true,
     templateUrl: 'templates/menu.html',
-    data: {
-      requiresLogin: true
-    }
+    // data: {
+    //   requiresLogin: true
+    // }
   })
 
   .state('app.login', {
@@ -86,7 +86,7 @@ angular.module('mooc', ['ionic', 'mooc.controllers', 'mooc.services',
   authProvider.init({
     domain: AUTH0_DOMAIN,
     clientID: AUTH0_CLIENT_ID,
-    loginState: 'login'
+    loginState: 'app.login'
   });
 
   jwtInterceptorProvider.tokenGetter = function(store, jwtHelper, auth) {

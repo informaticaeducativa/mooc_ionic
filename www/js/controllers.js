@@ -2,10 +2,11 @@ angular.module('mooc.controllers', [])
 
 .controller('AppCtrl', function() {})
 
-.controller('CoursesCtrl', function($scope, CoursesService) {
+.controller('CoursesCtrl', function($scope, CoursesService, auth, store, $state) {
 
 
   function refreshCourses() {
+    $scope.auth = auth;
     // For spinner's loading control
     $scope.loading = true;
     CoursesService.list().then(function(successResponse) {
@@ -18,9 +19,18 @@ angular.module('mooc.controllers', [])
   }
   refreshCourses();
 
+  $scope.logout = function() {
+    auth.signout();
+    store.remove('token');
+    store.remove('profile');
+    store.remove('refreshToken');
+    $state.go('login', {}, {reload: true});
+  };
+
 })
 
 .controller('CourseDetailCtrl', function($scope, $stateParams, CoursesService) {
+  // $scope.auth = auth;
   console.log($stateParams.courseId);
   CoursesService.get($stateParams.courseId).then(function(successResponse) {
     $scope.course = successResponse;
@@ -29,15 +39,15 @@ angular.module('mooc.controllers', [])
 
 })
 
-.controller('LoginCtrl', function($scope, auth, $state, store, $ionicModal) {
+.controller('LoginCtrl', function($scope, auth, $state, store) {
    // Form data for the login modal
 
   // Create the login modal that we will use later
-  $ionicModal.fromTemplateUrl('templates/login.html', {
-    scope: $scope
-  }).then(function(modal) {
-    $scope.modal = modal;
-  });
+  // $ionicModal.fromTemplateUrl('templates/login.html', {
+  //   scope: $scope
+  // }).then(function(modal) {
+  //   $scope.modal = modal;
+  // });
 
   function doAuth() {
     auth.signin({
@@ -48,6 +58,7 @@ angular.module('mooc.controllers', [])
         scope: 'openid offline_access'
       }
     }, function(profile, idToken, accessToken, state, refreshToken) {
+      $scope.isAuthenticated = auth.authenticated;
       store.set('profile', profile);
       store.set('token', idToken);
       store.set('refreshToken', refreshToken);
@@ -62,6 +73,8 @@ angular.module('mooc.controllers', [])
   });
 
   doAuth();
+
+  $scope.auth = auth;
 
 });
 
