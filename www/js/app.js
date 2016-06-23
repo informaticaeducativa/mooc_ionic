@@ -1,5 +1,6 @@
 
-angular.module('mooc', ['ionic', 'mooc.controllers', 'mooc.services', 'satellizer'])
+angular.module('mooc', ['ionic', 'mooc.controllers', 'mooc.services', 
+  'auth0', 'angular-storage', 'angular-jwt'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -15,56 +16,19 @@ angular.module('mooc', ['ionic', 'mooc.controllers', 'mooc.services', 'satellize
   });
 })
 
-.config(function($authProvider) {
-  var commonConfig = {
-    popupOptions: {
-      location: 'no',
-      toolbar: 'yes',
-      width: window.screen.width,
-      height: window.screen.height
-    }
-  };
+.config(function($stateProvider, $urlRouterProvider, 
+  authProvider, jwtInterceptorProvider, $httpProvider) {
 
-  if (ionic.Platform.isIOS() || ionic.Platform.isAndroid()) {
-    commonConfig.redirectUri = 'http://localhost';
-  }
-
-  $authProvider.storageType = 'localStorage';
-
-  $authProvider.facebook(angular.extend({}, commonConfig, {
-    clientId: '1580733465558680',
-    url: 'http://informaticaeducativaucc.com/login-facebook'
-  }));
-
-  $authProvider.twitter(angular.extend({}, commonConfig, {
-    url: 'http://localhost:3000/auth/twitter'
-  }));
-
-  $authProvider.google(angular.extend({}, commonConfig, {
-    clientId: '1008466316631-0t9ugiltj87a3jl7tsksggi2ipp9b1nt.apps.googleusercontent.com',
-    url: 'http://informaticaeducativaucc.com/login-google'
-  }));
-})
-
-.config(function($stateProvider, $urlRouterProvider) {
-
-  // $authProvider.facebook({
-  //   clientId: '1580733465558680',
-  //   url: 'http://informaticaeducativaucc.com/login-facebook',
-  //   responseType: 'token'
-  // });
-  //
-  // $authProvider.google({
-  //   clientId: '1008466316631-0t9ugiltj87a3jl7tsksggi2ipp9b1nt.apps.googleusercontent.com',
-  //   url: 'http://informaticaeducativaucc.com/login-google'
-  // });
 
   $stateProvider
 
   .state('app', {
     url: '/app',
     abstract: true,
-    templateUrl: 'templates/menu.html'
+    templateUrl: 'templates/menu.html',
+    data: {
+      requiresLogin: true
+    }
   })
 
   .state('app.login', {
@@ -117,4 +81,42 @@ angular.module('mooc', ['ionic', 'mooc.controllers', 'mooc.services', 'satellize
 
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/app/courses');
+
+  // Configure Auth0
+  authProvider.init({
+    domain: AUTH0_DOMAIN,
+    clientID: AUTH0_CLIENT_ID,
+    loginState: 'login'
+  });
+
+  jwtInterceptorProvider.tokenGetter = function(store, jwtHelper, auth) {
+    var idToken = store.get('token');
+    var refreshToken = store.get('refreshToken');
+    if (!idToken || !refreshToken) {
+      return null;
+    }
+    if (jwtHelper.isTokenExpired(idToken)) {
+      return auth.refreshIdToken(refreshToken).then(function(idToken) {
+        store.set('token', idToken);
+        return idToken;
+      });
+    } else {
+      return idToken;
+    }
+  }
+
+  $httpProvider.interceptors.push('jwtInterceptor');
+
+}).run(function($rootScope, auth, store) {
+  $rootScope.$on('$locationChangeStart', function() {
+    if (!auth.isAuthenticated) {
+      var token = store.get('token');
+      if (token) {
+        auth.authenticate(store.get('profile'), token);
+      }
+    }
+
+  });
+
+
 });
