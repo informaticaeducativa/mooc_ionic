@@ -1,4 +1,4 @@
-angular.module('mooc.controllers', [])
+angular.module('mooc.controllers', ['ngSanitize'])
 
 .controller('AppCtrl', function() {})
 
@@ -41,16 +41,59 @@ angular.module('mooc.controllers', [])
 
     // For spinner's loading control
     $scope.loading = true;
+     $scope.titles = [];
+     $scope.content = [];
     CoursesService.listCourseTemarios($stateParams.courseId)
     .then(function(successResponse) {
       $scope.temarios = successResponse;
+      //console.log($scope.temarios[0].titulo);
+      //$scope.temarios.length
+      for (var i = 0; i < $scope.temarios.length; i++) {
+        if ($scope.temarios[i].titulo === 'xxxxxxxxxxx') {
+          $scope.temarios.length --;
+        }else{
+          $scope.titles[i] = $scope.temarios[i].titulo;
+          $scope.content[i] = $scope.temarios[i].contenido;
+          console.log($scope.titles[i]);
+          console.log($scope.content[i]);
+        }
+        
+      }
+      //$scope.titles = [];
       console.log($scope.temarios);
+
     }).finally(function() {
         // after request is done, spinner will disappear
         $scope.loading = false;
       });
   }
   refreshTemarios();
+
+  // $scope.titles = [];
+  // for (var i=0; i<$scope.titles.length; i++) {
+  //   $scope.titles[i] = {
+  //     name: i,
+  //     temarios: []
+  //   };
+  //   for (var j=0; j<3; j++) {
+  //     $scope.titles[i].temarios.push(i + '-' + j);
+  //   }
+  // }
+  
+  /*
+   * if given group is the selected group, deselect it
+   * else, select the given group
+   */
+  $scope.toggleGroup = function(title) {
+    if ($scope.isGroupShown(title)) {
+      $scope.shownGroup = null;
+    } else {
+      $scope.shownGroup = title;
+    }
+  };
+  $scope.isGroupShown = function(title) {
+    return $scope.shownGroup === title;
+  };
 
 
 })

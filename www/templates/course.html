@@ -1,9 +1,9 @@
 <ion-view view-title="{{course.nombre}}" >
   <ion-content>
 
-	<div class="card">
+	<section class="card">
 
-		<div class="item item-text-wrap">
+		<article class="item item-text-wrap">
 			<img ng-src="http://informaticaeducativaucc.com/imagenes/{{ course.imagen_presentacion }}" width="100%">
 	    	<h2>{{course.nombre}}</h2>
 	    	<p><span class="strong">Duración:</span> {{course.duracion}} | 
@@ -11,9 +11,27 @@
 	    	<p><span class="strong">Temática:</span> {{course.nombre_tematica}}</p>
 	    	<p><span class="strong">Nivel:</span> {{course.nivel}}</p>
 	    	<p><span class="strong">Pre requisitos:</span> {{course.prerrequisitos}}</p>
-		</div>
+		</article>
 
-	</div>
+		<ion-list>
+        <div ng-repeat="title in titles">
+          <ion-item class="item-stable"
+                    ng-click="toggleGroup(title)"
+                    ng-class="{active: isGroupShown(title)}">
+              <i class="icon" ng-class="isGroupShown(title) ? 'ion-minus' : 'ion-plus'"></i>
+            &nbsp;
+             {{title}}
+          </ion-item>
+          <ion-item class="item-accordion"
+                    ng-repeat="contenido in content"
+                    ng-show="isGroupShown(title)" ng-bind-html="contenido">
+            {{contenido}}
+          </ion-item>
+        </div>
+
+      </ion-list>
+
+	</section>
 
   </ion-content>
 </ion-view>
