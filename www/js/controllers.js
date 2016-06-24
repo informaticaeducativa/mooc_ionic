@@ -30,12 +30,28 @@ angular.module('mooc.controllers', [])
 })
 
 .controller('CourseDetailCtrl', function($scope, $stateParams, CoursesService) {
-  // $scope.auth = auth;
-  console.log($stateParams.courseId);
+
+  //console.log($stateParams.courseId);
   CoursesService.get($stateParams.courseId).then(function(successResponse) {
     $scope.course = successResponse;
-    console.log(successResponse);
+    //console.log(successResponse);
   });
+
+  function refreshTemarios() {
+
+    // For spinner's loading control
+    $scope.loading = true;
+    CoursesService.listCourseTemarios($stateParams.courseId)
+    .then(function(successResponse) {
+      $scope.temarios = successResponse;
+      console.log($scope.temarios);
+    }).finally(function() {
+        // after request is done, spinner will disappear
+        $scope.loading = false;
+      });
+  }
+  refreshTemarios();
+
 
 })
 

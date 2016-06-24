@@ -16,7 +16,28 @@ angular.module('mooc.services', [])
       .then(function(response) {
         return response.data[0];
       });
-    }
+    },
+
+    getUserId: function(social_id) {
+      return $http.get(apiUrl + '/usuarios/' + social_id)
+      .then(function(response) {
+        return response.data[0];
+      });
+    },
+
+    listCourseTemarios: function(courseId) {
+      return $http.get(apiUrl + '/temarios?id_curso=' + courseId)
+      .then(function(response) {
+        return response.data;
+      });
+    },
+
+    getTemario: function(temarioId) {
+      return $http.get(apiUrl + '/temario/' + temarioId)
+      .then(function(response) {
+        return response.data;
+      });
+    },
 
     // create: function(note) {
     //   return $http.post(apiUrl + '/cursos/', note);
