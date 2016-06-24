@@ -1,24 +1,25 @@
 <ion-view view-title="{{course.nombre}}" >
   <ion-content>
 
-	<section class="card">
+    <section class="card">
 
-		<article class="item item-text-wrap">
-			<img ng-src="http://informaticaeducativaucc.com/imagenes/{{ course.imagen_presentacion }}" width="100%">
-	    	<h2>{{course.nombre}}</h2>
-	    	<p><span class="strong">Duración:</span> {{course.duracion}} |
-	    	<span class="strong">Precio: </span>{{course.precio}}</p>
-	    	<p><span class="strong">Temática:</span> {{course.nombre_tematica}}</p>
-	    	<p><span class="strong">Nivel:</span> {{course.nivel}}</p>
-	    	<p><span class="strong">Pre requisitos:</span> {{course.prerrequisitos}}</p>
-		</article>
+      <article class="item item-text-wrap">
+        <img ng-src="http://informaticaeducativaucc.com/imagenes/{{ course.imagen_presentacion }}" width="100%">
+        <h2>{{course.nombre}}</h2>
+        <p><span class="strong">Duración:</span> {{course.duracion}} |
+          <span class="strong">Precio: </span>{{course.precio}}</p>
+        <p><span class="strong">Temática:</span> {{course.nombre_tematica}}</p>
+        <p><span class="strong">Nivel:</span> {{course.nivel}}</p>
+        <p><span class="strong">Pre requisitos:</span> {{course.prerrequisitos}}</p>
+      </article>
 
-		<ion-list>
-      <div ng-repeat="temario in courseTemarios">
+      <ion-list>
+        <ion-spinner ng-show="loading"></ion-spinner>
+        <div ng-repeat="temario in courseTemarios">
           <ion-item class="item-stable"
-                    ng-click="toggleGroup(temario)"
-                    ng-class="{active: isGroupShown(temario)}">
-              <i class="icon" ng-class="isGroupShown(temario) ? 'ion-minus' : 'ion-plus'"></i>
+            ng-click="toggleGroup(temario)"
+            ng-class="{active: isGroupShown(temario)}">
+            <i class="icon" ng-class="isGroupShown(temario) ? 'ion-minus' : 'ion-plus'"></i>
             &nbsp;
             {{temario.title}}
           </ion-item>
@@ -28,24 +29,9 @@
             </ion-item>
           </div>
         </div>
-        <!-- <div ng-repeat="title in titles">
-          <ion-item class="item-stable"
-                    ng-click="toggleGroup(title)"
-                    ng-class="{active: isGroupShown(title)}">
-              <i class="icon" ng-class="isGroupShown(title) ? 'ion-minus' : 'ion-plus'"></i>
-            &nbsp;
-             {{title}}
-          </ion-item>
-          <ion-item class="item-accordion"
-                    ng-repeat="contenido in contents"
-                    ng-show="isGroupShown(title)" >
-            asd
-          </ion-item>
-        </div> -->
-
       </ion-list>
 
-	</section>
+    </section>
 
   </ion-content>
 </ion-view>
