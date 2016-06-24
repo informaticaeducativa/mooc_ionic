@@ -4,6 +4,8 @@ angular.module('mooc.controllers', ['ngSanitize'])
 
 .controller('CoursesCtrl', function($scope, CoursesService, auth, store, $state) {
 
+  $scope.isAuthenticated = auth.isAuthenticated;
+
 
   function refreshCourses() {
     $scope.auth = auth;
@@ -12,6 +14,7 @@ angular.module('mooc.controllers', ['ngSanitize'])
     CoursesService.list().then(function(successResponse) {
       $scope.courses = successResponse;
       console.log($scope.courses);
+      console.log(auth.isAuthenticated);
     }).finally(function() {
       // after request is done, spinner will disappear
       $scope.loading = false;
@@ -24,7 +27,10 @@ angular.module('mooc.controllers', ['ngSanitize'])
     store.remove('token');
     store.remove('profile');
     store.remove('refreshToken');
-    $state.go('login', {}, {reload: true});
+    //$window.location.reload(true);
+    console.log(auth.isAuthenticated);
+    $state.go($state.current, {}, {reload: true});
+    // refreshCourses();
   };
 
 })
@@ -100,11 +106,11 @@ angular.module('mooc.controllers', ['ngSanitize'])
         scope: 'openid offline_access'
       }
     }, function(profile, idToken, accessToken, state, refreshToken) {
-      $scope.isAuthenticated = auth.authenticated;
+      //$scope.isAuthenticated = auth.isAuthenticated;
       store.set('profile', profile);
       store.set('token', idToken);
       store.set('refreshToken', refreshToken);
-      $state.go('tab.dash');
+      $state.go('app.courses');
     }, function(error) {
       console.log("There was an error logging in", error);
     });
