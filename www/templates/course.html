@@ -6,7 +6,7 @@
 		<article class="item item-text-wrap">
 			<img ng-src="http://informaticaeducativaucc.com/imagenes/{{ course.imagen_presentacion }}" width="100%">
 	    	<h2>{{course.nombre}}</h2>
-	    	<p><span class="strong">Duración:</span> {{course.duracion}} | 
+	    	<p><span class="strong">Duración:</span> {{course.duracion}} |
 	    	<span class="strong">Precio: </span>{{course.precio}}</p>
 	    	<p><span class="strong">Temática:</span> {{course.nombre_tematica}}</p>
 	    	<p><span class="strong">Nivel:</span> {{course.nivel}}</p>
@@ -14,7 +14,21 @@
 		</article>
 
 		<ion-list>
-        <div ng-repeat="title in titles">
+      <div ng-repeat="temario in courseTemarios">
+          <ion-item class="item-stable"
+                    ng-click="toggleGroup(temario)"
+                    ng-class="{active: isGroupShown(temario)}">
+              <i class="icon" ng-class="isGroupShown(temario) ? 'ion-minus' : 'ion-plus'"></i>
+            &nbsp;
+            {{temario.title}}
+          </ion-item>
+          <div ng-show="isGroupShown(temario)">
+            <ion-item class="item-accordion" ng-bind-html="temario.content">
+              <a href="">{{temario.content}}</a>
+            </ion-item>
+          </div>
+        </div>
+        <!-- <div ng-repeat="title in titles">
           <ion-item class="item-stable"
                     ng-click="toggleGroup(title)"
                     ng-class="{active: isGroupShown(title)}">
@@ -23,11 +37,11 @@
              {{title}}
           </ion-item>
           <ion-item class="item-accordion"
-                    ng-repeat="contenido in content"
-                    ng-show="isGroupShown(title)" ng-bind-html="contenido">
-            {{contenido}}
+                    ng-repeat="contenido in contents"
+                    ng-show="isGroupShown(title)" >
+            asd
           </ion-item>
-        </div>
+        </div> -->
 
       </ion-list>
 

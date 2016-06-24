@@ -25,8 +25,8 @@ angular.module('mooc.services', [])
       });
     },
 
-    listCourseTemarios: function(courseId) {
-      return $http.get(apiUrl + '/temarios?id_curso=' + courseId)
+    listCourseTemariosByInfoCourse: function(courseId) {
+      return $http.get(apiUrl + '/temarios?id_curso=' + courseId + '&tipo_contenido=info_curso')
       .then(function(response) {
         return response.data;
       });

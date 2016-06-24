@@ -42,25 +42,32 @@ angular.module('mooc.controllers', ['ngSanitize'])
     // For spinner's loading control
     $scope.loading = true;
      $scope.titles = [];
-     $scope.content = [];
-    CoursesService.listCourseTemarios($stateParams.courseId)
+     $scope.contents = [];
+    CoursesService.listCourseTemariosByInfoCourse($stateParams.courseId)
     .then(function(successResponse) {
       $scope.temarios = successResponse;
+      $scope.courseTemarios = [];
       //console.log($scope.temarios[0].titulo);
       //$scope.temarios.length
       for (var i = 0; i < $scope.temarios.length; i++) {
-        if ($scope.temarios[i].titulo === 'xxxxxxxxxxx') {
-          $scope.temarios.length --;
-        }else{
-          $scope.titles[i] = $scope.temarios[i].titulo;
-          $scope.content[i] = $scope.temarios[i].contenido;
-          console.log($scope.titles[i]);
-          console.log($scope.content[i]);
-        }
-        
+        // $scope.titles[i] = $scope.temarios[i].titulo;
+        // $scope.contents[i] = $scope.temarios[i].contenido;
+        console.log($scope.temarios[i].titulo);
+        console.log($scope.temarios[i].contenido);
+        // if ($scope.temarios[i].titulo === 'xxxxxxxxxxx') {
+        //   $scope.temarios.length --;
+        // }else{
+        //
+        // }
+
+      $scope.courseTemarios[i] = {
+          title: $scope.temarios[i].titulo,
+          content: $scope.temarios[i].contenido
+        };
+
       }
       //$scope.titles = [];
-      console.log($scope.temarios);
+      console.log($scope.courseTemarios);
 
     }).finally(function() {
         // after request is done, spinner will disappear
@@ -79,7 +86,7 @@ angular.module('mooc.controllers', ['ngSanitize'])
   //     $scope.titles[i].temarios.push(i + '-' + j);
   //   }
   // }
-  
+
   /*
    * if given group is the selected group, deselect it
    * else, select the given group
@@ -136,4 +143,3 @@ angular.module('mooc.controllers', ['ngSanitize'])
   $scope.auth = auth;
 
 });
-
