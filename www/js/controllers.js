@@ -4,7 +4,7 @@ angular.module('mooc.controllers', ['ngSanitize'])
 
 .controller('CoursesCtrl', function($scope, CoursesService, auth, store, $state) {
 
-  $scope.isAuthenticated = auth.isAuthenticated;
+  //$scope.isAuthenticated = auth.isAuthenticated;
 
 
   function refreshCourses() {
@@ -14,7 +14,7 @@ angular.module('mooc.controllers', ['ngSanitize'])
     CoursesService.list().then(function(successResponse) {
       $scope.courses = successResponse;
       console.log($scope.courses);
-      console.log(auth.isAuthenticated);
+      //console.log(auth.isAuthenticated);
     }).finally(function() {
       // after request is done, spinner will disappear
       $scope.loading = false;
@@ -28,7 +28,7 @@ angular.module('mooc.controllers', ['ngSanitize'])
     store.remove('profile');
     store.remove('refreshToken');
     //$window.location.reload(true);
-    console.log(auth.isAuthenticated);
+    //console.log(auth.isAuthenticated);
     $state.go($state.current, {}, {reload: true});
     // refreshCourses();
   };
@@ -53,15 +53,6 @@ angular.module('mooc.controllers', ['ngSanitize'])
       $scope.courseTemarios = [];
       //console.log($scope.temarios[0].titulo);
       for (var i = 0; i < $scope.temarios.length; i++) {
-        // $scope.titles[i] = $scope.temarios[i].titulo;
-        // $scope.contents[i] = $scope.temarios[i].contenido;
-        // console.log($scope.temarios[i].titulo);
-        // console.log($scope.temarios[i].contenido);
-        // if ($scope.temarios[i].titulo === 'xxxxxxxxxxx') {
-        //   $scope.temarios.length --;
-        // }else{
-        //
-        // }
 
         $scope.courseTemarios[i] = {
           title: $scope.temarios[i].titulo,
