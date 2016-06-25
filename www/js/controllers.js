@@ -6,8 +6,15 @@ angular.module('mooc.controllers', ['ngSanitize'])
   $scope.auth = auth;
 })
 
-.controller('UserProfileCtrl', function($scope, auth) {
+.controller('UserProfileCtrl', function($scope, auth, UsersService) {
   $scope.auth = auth;
+
+  UsersService.getUserId(auth.profile.identities[0].user_id)
+  .then(function(successResponse) {
+    $scope.user_id = successResponse.id;
+    console.log('user_id: ' + $scope.user_id);
+  });
+
 })
 
 // .controller('OwnCoursesCtrl', function($scope, auth, CoursesService){
@@ -54,6 +61,7 @@ angular.module('mooc.controllers', ['ngSanitize'])
 
   CoursesService.get($stateParams.courseId).then(function(successResponse) {
     $scope.course = successResponse;
+    console.log(successResponse.id_curso);
   });
 
   function refreshTemarios() {
