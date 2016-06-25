@@ -1,6 +1,38 @@
-<ion-view view-title="{{course.nombre}}">
+<ion-view view-title="{{course.nombre}}" >
   <ion-content>
-    <h1></h1>
-    <h1>{{course.nombre_tematica}}</h1>
+
+    <section class="card">
+
+      <article class="item item-text-wrap">
+        <ion-spinner ng-show="loading"></ion-spinner>
+        <img ng-src="http://informaticaeducativaucc.com/imagenes/{{ course.imagen_presentacion }}" width="100%">
+        <h2>{{course.nombre}}</h2>
+        <p><span class="strong">Duración:</span> {{course.duracion}} |
+          <span class="strong">Precio: </span>{{course.precio}}</p>
+        <p><span class="strong">Temática:</span> {{course.nombre_tematica}}</p>
+        <p><span class="strong">Nivel:</span> {{course.nivel}}</p>
+        <p><span class="strong">Pre requisitos:</span> {{course.prerrequisitos}}</p>
+      </article>
+
+      <ion-list>
+        <ion-spinner ng-show="loading"></ion-spinner>
+        <div ng-repeat="temario in courseTemarios">
+          <ion-item class="item-stable"
+            ng-click="toggleGroup(temario)"
+            ng-class="{active: isGroupShown(temario)}">
+            <i class="icon" ng-class="isGroupShown(temario) ? 'ion-minus' : 'ion-plus'"></i>
+            &nbsp;
+            {{temario.title}}
+          </ion-item>
+          <div ng-show="isGroupShown(temario)">
+            <ion-item class="item-accordion" ng-bind-html="temario.content">
+              <a href="">{{temario.content}}</a>
+            </ion-item>
+          </div>
+        </div>
+      </ion-list>
+
+    </section>
+
   </ion-content>
 </ion-view>
