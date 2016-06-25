@@ -6,11 +6,22 @@ angular.module('mooc.controllers', ['ngSanitize'])
   $scope.auth = auth;
 })
 
+.controller('UserProfileCtrl', function($scope, auth) {
+  $scope.auth = auth;
+})
+
+// .controller('OwnCoursesCtrl', function($scope, auth, CoursesService){
+//   $scope.auth = auth;
+//
+//   function refreshOwnCourses() {
+//     $scope.loading = true;
+//   }
+//
+// })
+
 .controller('CoursesCtrl', function($scope, CoursesService, auth, store, $state) {
 
-  //$scope.isAuthenticated = auth.isAuthenticated;
   $scope.auth = auth;
-
 
   function refreshCourses() {
     // For spinner's loading control
