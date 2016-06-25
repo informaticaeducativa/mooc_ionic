@@ -9,11 +9,18 @@ angular.module('mooc.controllers', ['ngSanitize'])
 .controller('UserProfileCtrl', function($scope, auth, UsersService) {
   $scope.auth = auth;
 
-  UsersService.getUserId(auth.profile.identities[0].user_id)
+  // UsersService.getUserId(auth.profile.identities[0].user_id)
+  // .then(function(successResponse) {
+  //   $scope.user_id = successResponse.id;
+  //   console.log('user_id: ' + $scope.user_id);
+  // });
+
+  UsersService.getUser(auth.profile.identities[0].user_id)
   .then(function(successResponse) {
-    $scope.user_id = successResponse.id;
-    console.log('user_id: ' + $scope.user_id);
+    $scope.user = successResponse;
+    console.log('user: ' + $scope.user);
   });
+
 
 })
 

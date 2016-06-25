@@ -5,12 +5,23 @@ angular.module('mooc.services', [])
 
   return {
 
-    getUserId: function(social_id) {
+    // getUserId: function(social_id) {
+    //   return $http.get(apiUrl + '/usuario/social/' + social_id)
+    //   .then(function(response) {
+    //     return response.data[0];
+    //   });
+    // },
+
+    getUser: function(social_id) {
       return $http.get(apiUrl + '/usuario/social/' + social_id)
       .then(function(response) {
         return response.data[0];
       });
     }
+
+    // getUser: function(user_id) {
+    //   return $http.get
+    // }
 
   };
 
