@@ -2,29 +2,14 @@ angular.module('mooc.services', [])
 
 .factory('UsersService', function($http) {
   var apiUrl = 'http://informaticaeducativaucc.com/api';
-
   return {
-
-    // getUserId: function(social_id) {
-    //   return $http.get(apiUrl + '/usuario/social/' + social_id)
-    //   .then(function(response) {
-    //     return response.data[0];
-    //   });
-    // },
-
     getUser: function(social_id) {
       return $http.get(apiUrl + '/usuario/social/' + social_id)
       .then(function(response) {
         return response.data[0];
       });
     }
-
-    // getUser: function(user_id) {
-    //   return $http.get
-    // }
-
   };
-
 })
 
 .factory('CoursesService', function($http) {
