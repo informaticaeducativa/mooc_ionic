@@ -1,5 +1,5 @@
 
-angular.module('mooc', ['ionic', 'mooc.controllers', 'mooc.services', 
+angular.module('mooc', ['ionic', 'mooc.controllers', 'mooc.services',
   'auth0', 'angular-storage', 'angular-jwt'])
 
 .run(function($ionicPlatform) {
@@ -16,7 +16,7 @@ angular.module('mooc', ['ionic', 'mooc.controllers', 'mooc.services',
   });
 })
 
-.config(function($stateProvider, $urlRouterProvider, 
+.config(function($stateProvider, $urlRouterProvider,
   authProvider, jwtInterceptorProvider, $httpProvider) {
 
 
@@ -24,8 +24,9 @@ angular.module('mooc', ['ionic', 'mooc.controllers', 'mooc.services',
 
   .state('app', {
     url: '/app',
-    abstract: true,
+    //abstract: true,
     templateUrl: 'templates/menu.html',
+    controller: 'MenuCtrl'
     // data: {
     //   requiresLogin: true
     // }

@@ -2,13 +2,17 @@ angular.module('mooc.controllers', ['ngSanitize'])
 
 .controller('AppCtrl', function() {})
 
+.controller('MenuCtrl', function($scope, auth) {
+  $scope.auth = auth;
+})
+
 .controller('CoursesCtrl', function($scope, CoursesService, auth, store, $state) {
 
   //$scope.isAuthenticated = auth.isAuthenticated;
+  $scope.auth = auth;
 
 
   function refreshCourses() {
-    $scope.auth = auth;
     // For spinner's loading control
     $scope.loading = true;
     CoursesService.list().then(function(successResponse) {
@@ -101,7 +105,7 @@ angular.module('mooc.controllers', ['ngSanitize'])
       store.set('profile', profile);
       store.set('token', idToken);
       store.set('refreshToken', refreshToken);
-      $state.go('app.courses');
+      $state.go('app.login');
     }, function(error) {
       console.log("There was an error logging in", error);
     });

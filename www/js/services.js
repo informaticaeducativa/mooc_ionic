@@ -19,7 +19,7 @@ angular.module('mooc.services', [])
     },
 
     getUserId: function(social_id) {
-      return $http.get(apiUrl + '/usuarios/' + social_id)
+      return $http.get(apiUrl + '/usuario/social_id/' + social_id)
       .then(function(response) {
         return response.data[0];
       });

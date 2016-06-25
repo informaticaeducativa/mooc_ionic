@@ -17,19 +17,20 @@
     </ion-header-bar>
     <ion-content>
       <ion-list>
-        <ion-item ng-if="!isAuthenticated" menu-close href="#/app/login">
+        <ion-item ng-if="!auth.isAuthenticated" menu-close href="#/app/login">
           Login
         </ion-item>
-        <ion-item ng-if="isAuthenticated" menu-close href="#/app/courses">
-          {{auth.profile.nickname}}
+        <ion-item ng-if="auth.isAuthenticated" menu-close href="#/app/profile">
+          Mi Perfil
         </ion-item>
 
- <!--        <ion-item menu-close href="#/app/search">
-          
+      <!--
+        <ion-item menu-close href="#/app/search">
         </ion-item>
         <ion-item menu-close href="#/app/browse">
           Browse
-        </ion-item> -->
+        </ion-item>
+      -->
         <ion-item menu-close href="#/app/courses">
           Cursos
         </ion-item>
