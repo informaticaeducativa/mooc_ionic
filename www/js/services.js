@@ -12,6 +12,30 @@ angular.module('mooc.services', [])
   };
 })
 
+.factory('UserCoursesService', function($http) {
+  var apiUrl = 'http://informaticaeducativaucc.com/api';
+  return {
+    listUserCourses: function(user_id) {
+      return $http.get(apiUrl + '/curso_usuario/' + user_id)
+      .then(function(response) {
+        return response.data;
+      });
+    }
+  };
+})
+
+.factory('CountriesService', function($http) {
+  var apiUrl = 'http://informaticaeducativaucc.com/api';
+  return {
+    getUser: function(social_id) {
+      return $http.get(apiUrl + '/usuario/social/' + social_id)
+      .then(function(response) {
+        return response.data[0];
+      });
+    }
+  };
+})
+
 .factory('CoursesService', function($http) {
 
   var apiUrl = 'http://informaticaeducativaucc.com/api';

@@ -17,21 +17,41 @@ angular.module('mooc.controllers', ['ngSanitize'])
 
   UsersService.getUser(auth.profile.identities[0].user_id)
   .then(function(successResponse) {
-    $scope.user = successResponse;
+    $rootScope.user = successResponse;
     console.log('user: ' + $scope.user);
   });
 
-
 })
 
-// .controller('OwnCoursesCtrl', function($scope, auth, CoursesService){
-//   $scope.auth = auth;
-//
-//   function refreshOwnCourses() {
-//     $scope.loading = true;
-//   }
-//
-// })
+.controller('OwnCoursesCtrl', function($scope, auth, UserCoursesService){
+  $scope.auth = auth;
+
+  function refreshUserCourses() {
+
+    // For spinner's loading control
+    $scope.loading = true;
+    $scope.userCourses = [];
+    CoursesService.listUserCourses($rootScope.user.id)
+    .then(function(successResponse) {
+      $scope.userCourses = successResponse;
+      //
+      // for (var i = 0; i < $scope.temarios.length; i++) {
+      //   $scope.courseTemarios[i] = {
+      //     title: $scope.temarios[i].titulo,
+      //     content: $scope.temarios[i].contenido
+      //   };
+      //
+      // }
+      console.log($scope.courseTemarios);
+
+    }).finally(function() {
+      // after request is done, spinner will disappear
+      $scope.loading = false;
+    });
+  }
+  refreshUserCourses();
+
+})
 
 .controller('CoursesCtrl', function($scope, CoursesService, auth, store, $state) {
 
