@@ -18,20 +18,87 @@ angular.module('mooc.controllers', ['ngSanitize'])
   UsersService.getUser(auth.profile.identities[0].user_id)
   .then(function(successResponse) {
     $scope.user = successResponse;
-    console.log('user: ' + $scope.user);
+    console.log('user: ' + $scope.user.id);
   });
-
 
 })
 
-// .controller('OwnCoursesCtrl', function($scope, auth, CoursesService){
-//   $scope.auth = auth;
-//
-//   function refreshOwnCourses() {
-//     $scope.loading = true;
-//   }
-//
-// })
+.controller('OwnCoursesCtrl', function($scope, auth, UserCoursesService, UsersService, CoursesService){
+  $scope.auth = auth;
+
+  function intersection_destructive(a, b) {
+    var result = [];
+    while( a.length > 0 && b.length > 0 ) {
+      if      (a[0] < b[0] ){ a.shift(); }
+      else if (a[0] > b[0] ){ b.shift(); }
+      else {
+        result.push(a.shift());
+        b.shift();
+      }
+    }
+
+    return result;
+  }
+
+  function refreshUserCourses() {
+    UsersService.getUser(auth.profile.identities[0].user_id)
+    .then(function(successResponse) {
+      $scope.user = successResponse;
+      console.log('user: ' + $scope.user.id);
+
+      // For spinner's loading control
+      $scope.loading = true;
+      UserCoursesService.listUserCourses($scope.user.id)
+      .then(function(successResponse) {
+        //userCourseIds = successResponse;
+        userCourseIds = [];
+        userCourses = [];
+        //console.log(userCourseIds.length);
+        for (var i = 0; i < successResponse.length; i++) {
+          userCourseIds[i] = successResponse[i].id_curso;
+          //console.log(userCourseIds[i]);
+        }
+        userCourseIds = userCourseIds.sort();
+        CoursesService.list().then(function(successResponse) {
+          courses = successResponse;
+          courses = courses.sort(function (a,b) {
+             a.id - b.id;
+          });
+          userCourseIds.sort();
+          //console.log(courses);
+          //console.log('userCourseIds: ' + userCourseIds);
+          for (var i = 0; i < courses.length; i++) {
+            console.log('Courses ID: ' + courses[i].id_curso);
+            if (courses[i].id_curso === userCourseIds[i]) {
+              $scope.userCourses[i] = courses[i];
+              // console.log('userCourses: \n' + userCourses[i]);
+              // console.log('userCoursesIds: \n' + userCourses[i].id_curso);
+            }
+            
+            //courseIds[i] = courses[i].id_curso;
+            //console.log(courseIds[i]);
+          }
+          console.log($scope.userCourses);
+          // courseIds = courseIds.sort();
+          //console.log(userCourseIds);
+          //console.log(courseIds);
+          // $scope.userCourses = intersection_destructive(userCourseIds, courseIds);
+          // console.log(userCourses);
+        })
+
+
+      }).finally(function() {
+        // after request is done, spinner will disappear
+        $scope.loading = false;
+      });
+
+    });
+
+
+  }
+  refreshUserCourses();
+
+})
 
 .controller('CoursesCtrl', function($scope, CoursesService, auth, store, $state) {
 
@@ -48,6 +115,7 @@ angular.module('mooc.controllers', ['ngSanitize'])
       // after request is done, spinner will disappear
       $scope.loading = false;
     });
+    return $scope.courses;
   }
   refreshCourses();
 

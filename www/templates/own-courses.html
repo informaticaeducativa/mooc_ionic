@@ -1,0 +1,15 @@
+<ion-view view-title="Mis Cursos">
+  <ion-content>
+  	<ion-list>
+  		<ion-spinner ng-show="loading"></ion-spinner>
+  		<ion-item class="item item-thumbnail"
+          ng-repeat="userCourse in userCourses" href="#/app/courses/{{course.id_curso}}">
+            <div class="list">
+              <img ng-src="http://informaticaeducativaucc.com/imagenes/{{ course.imagen_presentacion }}" width="200px">
+              <h2>{{userCourse.nombre}}</h2>
+              <h4>{{userCourse.nombre_tematica}}</h4>
+            </div>
+        </ion-item>
+  	</ion-list>
+  </ion-content>
+</ion-view>
