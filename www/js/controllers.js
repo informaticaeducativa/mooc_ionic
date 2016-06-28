@@ -52,7 +52,7 @@ angular.module('mooc.controllers', ['ngSanitize'])
       .then(function(successResponse) {
         //userCourseIds = successResponse;
         userCourseIds = [];
-        courseIds = [];
+        userCourses = [];
         //console.log(userCourseIds.length);
         for (var i = 0; i < successResponse.length; i++) {
           userCourseIds[i] = successResponse[i].id_curso;
@@ -61,15 +61,29 @@ angular.module('mooc.controllers', ['ngSanitize'])
         userCourseIds = userCourseIds.sort();
         CoursesService.list().then(function(successResponse) {
           courses = successResponse;
-          for (var i = 0; i < successResponse.length; i++) {
-            courseIds[i] = courses[i].id_curso;
-            console.log(courseIds[i]);
+          courses = courses.sort(function (a,b) {
+             a.id - b.id;
+          });
+          userCourseIds.sort();
+          //console.log(courses);
+          //console.log('userCourseIds: ' + userCourseIds);
+          for (var i = 0; i < courses.length; i++) {
+            console.log('Courses ID: ' + courses[i].id_curso);
+            if (courses[i].id_curso === userCourseIds[i]) {
+              $scope.userCourses[i] = courses[i];
+              // console.log('userCourses: \n' + userCourses[i]);
+              // console.log('userCoursesIds: \n' + userCourses[i].id_curso);
+            }
+            
+            //courseIds[i] = courses[i].id_curso;
+            //console.log(courseIds[i]);
           }
-          courseIds = courseIds.sort();
-          console.log(userCourseIds);
-          console.log(courseIds);
-          userCourses = intersection_destructive(userCourseIds, courseIds);
-          console.log(userCourses);
+          console.log($scope.userCourses);
+          // courseIds = courseIds.sort();
+          //console.log(userCourseIds);
+          //console.log(courseIds);
+          // $scope.userCourses = intersection_destructive(userCourseIds, courseIds);
+          // console.log(userCourses);
         })
 
 
