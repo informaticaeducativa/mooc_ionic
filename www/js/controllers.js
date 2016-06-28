@@ -65,24 +65,23 @@ angular.module('mooc.controllers', ['ngSanitize'])
           userCoursesTable = userCoursesTable.sort(function (a,b) {
             return a.id_curso - b.id_curso;
           });
-          userCourseIds.sort();
 
           // console.log('Table order: ' + userCoursesTable[0].id_curso);
 
           for (var i = 0; i < userCoursesTable.length; i++) {
-            console.log('Courses ID: ' + courses[i].id_curso);
+            //console.log('Courses ID: ' + courses[i].id_curso);
             if (courses[i].id_curso === userCourseIds[i]) {
               $scope.userCourses[i] = courses[i];
               $scope.userCourses[i]['tipo_relacion'] = userCoursesTable[i].tipo_relacion;
-              console.log($scope.userCourses[i].tipo_relacion);
-              console.log('userCourses ids: ' + $scope.userCourses[i].id_curso);
-              console.log('userCoursesTable ids: ' + userCoursesTable[i].id_curso);
-
+              // console.log($scope.userCourses[i].tipo_relacion);
+              // console.log('userCourses ids: ' + $scope.userCourses[i].id_curso);
+              // console.log('userCoursesTable ids: ' + userCoursesTable[i].id_curso);
+              console.log('profes asistentes: ' + $scope.userCourses[i].profesores_asistentes[i].nombre);
             }
             
           }
           //console.log($scope.userCourses);
-          console.log($scope.userCourses[0].tipo_relacion);
+          //console.log($scope.userCourses[0].tipo_relacion);
 
         })
 
