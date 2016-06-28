@@ -52,7 +52,7 @@ angular.module('mooc.controllers', ['ngSanitize'])
       .then(function(successResponse) {
         //userCourseIds = successResponse;
         userCourseIds = [];
-        userCourses = [];
+        $scope.userCourses = [];
         //console.log(userCourseIds.length);
         for (var i = 0; i < successResponse.length; i++) {
           userCourseIds[i] = successResponse[i].id_curso;
