@@ -44,6 +44,7 @@ angular.module('mooc', ['ionic', 'mooc.controllers', 'mooc.services',
 
     .state('app.own-courses', {
       url: '/own-courses',
+      cache: false,
       views: {
         'menuContent': {
           templateUrl: 'templates/own-courses.html',
@@ -54,6 +55,7 @@ angular.module('mooc', ['ionic', 'mooc.controllers', 'mooc.services',
 
     .state('app.profile', {
       url: '/profile',
+      cache: false,
       views: {
         'menuContent': {
           templateUrl: 'templates/profile.html',
