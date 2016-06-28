@@ -26,64 +26,64 @@ angular.module('mooc.controllers', ['ngSanitize'])
 .controller('OwnCoursesCtrl', function($scope, auth, UserCoursesService, UsersService, CoursesService){
   $scope.auth = auth;
 
-  function intersection_destructive(a, b) {
-    var result = [];
-    while( a.length > 0 && b.length > 0 ) {
-      if      (a[0] < b[0] ){ a.shift(); }
-      else if (a[0] > b[0] ){ b.shift(); }
-      else {
-        result.push(a.shift());
-        b.shift();
-      }
-    }
+  // function intersection_destructive(a, b) {
+  //   var result = [];
+  //   while( a.length > 0 && b.length > 0 ) {
+  //     if      (a[0] < b[0] ){ a.shift(); }
+  //     else if (a[0] > b[0] ){ b.shift(); }
+  //     else {
+  //       result.push(a.shift());
+  //       b.shift();
+  //     }
+  //   }
 
-    return result;
-  }
+  //   return result;
+  // }
 
   function refreshUserCourses() {
     UsersService.getUser(auth.profile.identities[0].user_id)
     .then(function(successResponse) {
       $scope.user = successResponse;
-      console.log('user: ' + $scope.user.id);
+      //console.log('user: ' + $scope.user.id);
 
       // For spinner's loading control
       $scope.loading = true;
       UserCoursesService.listUserCourses($scope.user.id)
       .then(function(successResponse) {
-        //userCourseIds = successResponse;
+        userCoursesTable = successResponse;
         userCourseIds = [];
         $scope.userCourses = [];
-        //console.log(userCourseIds.length);
-        for (var i = 0; i < successResponse.length; i++) {
-          userCourseIds[i] = successResponse[i].id_curso;
-          //console.log(userCourseIds[i]);
+        for (var i = 0; i < userCoursesTable.length; i++) {
+          userCourseIds[i] = userCoursesTable[i].id_curso;
         }
         userCourseIds = userCourseIds.sort();
         CoursesService.list().then(function(successResponse) {
           courses = successResponse;
           courses = courses.sort(function (a,b) {
-             a.id - b.id;
+            return a.id_curso - b.id_curso;
+          });
+          userCoursesTable = userCoursesTable.sort(function (a,b) {
+            return a.id_curso - b.id_curso;
           });
           userCourseIds.sort();
-          //console.log(courses);
-          //console.log('userCourseIds: ' + userCourseIds);
-          for (var i = 0; i < courses.length; i++) {
+
+          // console.log('Table order: ' + userCoursesTable[0].id_curso);
+
+          for (var i = 0; i < userCoursesTable.length; i++) {
             console.log('Courses ID: ' + courses[i].id_curso);
             if (courses[i].id_curso === userCourseIds[i]) {
               $scope.userCourses[i] = courses[i];
-              // console.log('userCourses: \n' + userCourses[i]);
-              // console.log('userCoursesIds: \n' + userCourses[i].id_curso);
+              $scope.userCourses[i]['tipo_relacion'] = userCoursesTable[i].tipo_relacion;
+              console.log($scope.userCourses[i].tipo_relacion);
+              console.log('userCourses ids: ' + $scope.userCourses[i].id_curso);
+              console.log('userCoursesTable ids: ' + userCoursesTable[i].id_curso);
+
             }
             
-            //courseIds[i] = courses[i].id_curso;
-            //console.log(courseIds[i]);
           }
-          console.log($scope.userCourses);
-          // courseIds = courseIds.sort();
-          //console.log(userCourseIds);
-          //console.log(courseIds);
-          // $scope.userCourses = intersection_destructive(userCourseIds, courseIds);
-          // console.log(userCourses);
+          //console.log($scope.userCourses);
+          console.log($scope.userCourses[0].tipo_relacion);
+
         })
 
 
