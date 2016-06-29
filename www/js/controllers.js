@@ -41,13 +41,14 @@ angular.module('mooc.controllers', ['ngSanitize'])
   // }
 
   function refreshUserCourses() {
+    $scope.loading = true;
     UsersService.getUser(auth.profile.identities[0].user_id)
     .then(function(successResponse) {
       $scope.user = successResponse;
       //console.log('user: ' + $scope.user.id);
 
       // For spinner's loading control
-      $scope.loading = true;
+      //$scope.loading = true;
       UserCoursesService.listUserCourses($scope.user.id)
       .then(function(successResponse) {
         userCoursesTable = successResponse;
