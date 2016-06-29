@@ -49,9 +49,9 @@ angular.module('mooc.controllers', ['ngSanitize'])
   // }
 
   function refreshUserCourses() {
-    $scope.loading = true;
     UsersService.getUser(auth.profile.identities[0].user_id)
     .then(function(successResponse) {
+      $scope.loading = true;
       $scope.user = successResponse;
       //console.log('user: ' + $scope.user.id);
 
@@ -85,7 +85,7 @@ angular.module('mooc.controllers', ['ngSanitize'])
               // console.log($scope.userCourses[i].tipo_relacion);
               // console.log('userCourses ids: ' + $scope.userCourses[i].id_curso);
               // console.log('userCoursesTable ids: ' + userCoursesTable[i].id_curso);
-              console.log('profes asistentes: ' + $scope.userCourses[i].profesores_asistentes[i].nombre);
+              // console.log('profes asistentes: ' + $scope.userCourses[i].profesores_asistentes[i].nombre);
             }
 
           }
@@ -95,11 +95,11 @@ angular.module('mooc.controllers', ['ngSanitize'])
         })
 
 
-      }).finally(function() {
-        // after request is done, spinner will disappear
-        $scope.loading = false;
-      });
+      })
 
+    }).finally(function() {
+      // after request is done, spinner will disappear
+      $scope.loading = false;
     });
 
 
@@ -140,7 +140,7 @@ angular.module('mooc.controllers', ['ngSanitize'])
 
 })
 
-.controller('CourseDetailCtrl', function($scope, $stateParams, CoursesService, UsersService, UserCoursesService) {
+.controller('CourseDetailCtrl', function($scope, $stateParams, $state, auth, CoursesService, UsersService, UserCoursesService) {
 
   CoursesService.get($stateParams.courseId).then(function(successResponse) {
     $scope.course = successResponse;
@@ -151,7 +151,6 @@ angular.module('mooc.controllers', ['ngSanitize'])
       $scope.loading = true;
       $scope.user = successResponse;
       console.log('user: ' + $scope.user.id);
-
 
       // $scope.userCourseData = {
       //   user_id: $scope.user.id,
@@ -165,8 +164,10 @@ angular.module('mooc.controllers', ['ngSanitize'])
         });
       };
 
-    })
-
+    }).finally(function() {
+      // after request is done, spinner will disappear
+      $scope.loading = false;
+    });
 
   });
 
