@@ -15,12 +15,25 @@ angular.module('mooc.services', [])
 .factory('UserCoursesService', function($http) {
   var apiUrl = 'http://informaticaeducativaucc.com/api';
   return {
+
     listUserCourses: function(user_id) {
       return $http.get(apiUrl + '/curso_usuario/' + user_id)
       .then(function(response) {
         return response.data;
       });
+    },
+
+    createUserCourse: function(user_id, course_id) {
+      return $http.post(apiUrl + '/assign-course?user_id=' + user_id + '&course_id=' + course_id)
+      .then(function(response) {
+        return response.data;
+        console.log(response);
+        console.log(response.data);
+        console.log('user_id: ' + user_id);
+        console.log('course_id: ' + course_id);
+      });
     }
+
   };
 })
 

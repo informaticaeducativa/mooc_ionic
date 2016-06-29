@@ -108,7 +108,7 @@ angular.module('mooc.controllers', ['ngSanitize'])
 
 })
 
-.controller('CoursesCtrl', function($scope, CoursesService, auth, store, $state) {
+.controller('CoursesCtrl', function($scope, CoursesService, auth, store, $state, UserCoursesService) {
 
   $scope.auth = auth;
 
@@ -140,11 +140,34 @@ angular.module('mooc.controllers', ['ngSanitize'])
 
 })
 
-.controller('CourseDetailCtrl', function($scope, $stateParams, CoursesService) {
+.controller('CourseDetailCtrl', function($scope, $stateParams, CoursesService, UsersService, UserCoursesService) {
 
   CoursesService.get($stateParams.courseId).then(function(successResponse) {
     $scope.course = successResponse;
     console.log(successResponse.id_curso);
+
+    UsersService.getUser(auth.profile.identities[0].user_id)
+    .then(function(successResponse) {
+      $scope.loading = true;
+      $scope.user = successResponse;
+      console.log('user: ' + $scope.user.id);
+
+
+      // $scope.userCourseData = {
+      //   user_id: $scope.user.id,
+      //   description: $scope.course.id_curso
+      // };
+
+      $scope.save = function() {
+        UserCoursesService.createUserCourse($scope.user.id, $scope.course.id_curso)
+        .then(function() {
+          $state.go('app.own-courses');
+        });
+      };
+
+    })
+
+
   });
 
   function refreshTemarios() {
