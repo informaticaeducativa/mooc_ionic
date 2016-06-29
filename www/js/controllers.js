@@ -15,11 +15,19 @@ angular.module('mooc.controllers', ['ngSanitize'])
   //   console.log('user_id: ' + $scope.user_id);
   // });
 
-  UsersService.getUser(auth.profile.identities[0].user_id)
-  .then(function(successResponse) {
-    $scope.user = successResponse;
-    console.log('user: ' + $scope.user.id);
-  });
+  function refreshUsers() {
+    UsersService.getUser(auth.profile.identities[0].user_id)
+    .then(function(successResponse) {
+      $scope.loading = true;
+      $scope.user = successResponse;
+      console.log('user: ' + $scope.user.id);
+    })
+    .finally(function(){
+      $scope.loading = false;
+    });
+  }
+
+  refreshUsers();
 
 })
 
@@ -79,7 +87,7 @@ angular.module('mooc.controllers', ['ngSanitize'])
               // console.log('userCoursesTable ids: ' + userCoursesTable[i].id_curso);
               console.log('profes asistentes: ' + $scope.userCourses[i].profesores_asistentes[i].nombre);
             }
-            
+
           }
           //console.log($scope.userCourses);
           //console.log($scope.userCourses[0].tipo_relacion);
