@@ -23,8 +23,8 @@ angular.module('mooc.services', [])
       });
     },
 
-    createUserCourse: function(user_id, course_id) {
-      return $http.post(apiUrl + '/assign-course?user_id=' + user_id + '&course_id=' + course_id)
+    createUserCourse: function(data) {
+      return $http.post(apiUrl + '/assign-course/', data)
       .then(function(response) {
         return response.data;
         console.log(response);
