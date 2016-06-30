@@ -2,11 +2,11 @@ angular.module('mooc.controllers', ['ngSanitize'])
 
 .controller('AppCtrl', function() {})
 
-.controller('MenuCtrl', function($scope, auth) {
+.controller('MenuCtrl', function($scope, auth, $rootScope) {
   $scope.auth = auth;
 })
 
-.controller('UserProfileCtrl', function($scope, auth, UsersService) {
+.controller('UserProfileCtrl', function($scope, auth, UsersService, $state, store) {
   $scope.auth = auth;
 
   function refreshUsers() {
@@ -22,6 +22,17 @@ angular.module('mooc.controllers', ['ngSanitize'])
   }
 
   refreshUsers();
+
+  $scope.logout = function() {
+    auth.signout();
+    store.remove('token');
+    store.remove('profile');
+    store.remove('refreshToken');
+    //$window.location.reload(true);
+    //console.log(auth.isAuthenticated);
+    $state.go('app.login');
+    // refreshCourses();
+  };
 
 })
 
@@ -54,8 +65,6 @@ angular.module('mooc.controllers', ['ngSanitize'])
             return a.id_curso - b.id_curso;
           });
 
-          // console.log('Table order: ' + userCoursesTable[0].id_curso);
-
           for (var i = 0; i < userCoursesTable.length; i++) {
             //console.log('Courses ID: ' + courses[i].id_curso);
             if (courses[i].id_curso === userCourseIds[i]) {
@@ -67,8 +76,6 @@ angular.module('mooc.controllers', ['ngSanitize'])
               // console.log('profes asistentes: ' + $scope.userCourses[i].profesores_asistentes[i].nombre);
             }
           }
-          //console.log($scope.userCourses);
-          //console.log($scope.userCourses[0].tipo_relacion);
         })
       })
 
@@ -80,7 +87,7 @@ angular.module('mooc.controllers', ['ngSanitize'])
   refreshUserCourses();
 })
 
-.controller('CoursesCtrl', function($scope, CoursesService, auth, store, $state, UserCoursesService) {
+.controller('CoursesCtrl', function($scope, CoursesService, auth, $state, UserCoursesService, $ionicHistory) {
 
   $scope.auth = auth;
 
@@ -90,7 +97,6 @@ angular.module('mooc.controllers', ['ngSanitize'])
     CoursesService.list().then(function(successResponse) {
       $scope.courses = successResponse;
       console.log($scope.courses);
-      //console.log(auth.isAuthenticated);
     }).finally(function() {
       // after request is done, spinner will disappear
       $scope.loading = false;
@@ -107,114 +113,117 @@ angular.module('mooc.controllers', ['ngSanitize'])
     //$window.location.reload(true);
     //console.log(auth.isAuthenticated);
     $state.go($state.current, {}, {reload: true});
-    // refreshCourses();
   };
+
+  $ionicHistory.nextViewOptions({
+    disableBack: true
+  });
 
 })
 
 .controller('CourseDetailCtrl', function($scope, $stateParams, $state, auth,
-  CoursesService, UsersService, UserCoursesService) {
+  CoursesService, UsersService, UserCoursesService, $rootScope) {
 
-  CoursesService.get($stateParams.courseId).then(function(successResponse) {
-    $scope.course = successResponse;
-    console.log(successResponse.id_curso);
+    CoursesService.get($stateParams.courseId).then(function(successResponse) {
+      $scope.course = successResponse;
+      console.log(successResponse.id_curso);
+      
+      UsersService.getUser(auth.profile.identities[0].user_id)
+      .then(function(successResponse) {
+        $scope.loading = true;
+        $scope.user = successResponse;
+        console.log('user: ' + $scope.user.id);
 
-    UsersService.getUser(auth.profile.identities[0].user_id)
-    .then(function(successResponse) {
-      $scope.loading = true;
-      $scope.user = successResponse;
-      console.log('user: ' + $scope.user.id);
-
-      userCourseData = {
-        user_id: $scope.user.id,
-        course_id: $scope.course.id_curso
-      };
-
-      $scope.save = function() {
-        UserCoursesService.createUserCourse(userCourseData)
-        .then(function() {
-          $state.go('app.own-courses');
-        });
-      };
-
-    }).finally(function() {
-      // after request is done, spinner will disappear
-      $scope.loading = false;
-    });
-
-  });
-
-  function refreshTemarios() {
-
-    // For spinner's loading control
-    $scope.loading = true;
-    $scope.titles = [];
-    $scope.contents = [];
-    CoursesService.listCourseTemariosByInfoCourse($stateParams.courseId)
-    .then(function(successResponse) {
-      $scope.temarios = successResponse;
-      $scope.courseTemarios = [];
-      //console.log($scope.temarios[0].titulo);
-      for (var i = 0; i < $scope.temarios.length; i++) {
-
-        $scope.courseTemarios[i] = {
-          title: $scope.temarios[i].titulo,
-          content: $scope.temarios[i].contenido
+        userCourseData = {
+          user_id: $scope.user.id,
+          course_id: $scope.course.id_curso
         };
-      }
-      console.log($scope.courseTemarios);
 
-    }).finally(function() {
-      // after request is done, spinner will disappear
-      $scope.loading = false;
+        $scope.save = function() {
+          UserCoursesService.createUserCourse(userCourseData)
+          .then(function() {
+            $state.go('app.own-courses');
+          });
+        };
+
+      }).finally(function() {
+        // after request is done, spinner will disappear
+        $scope.loading = false;
+      });
+
     });
-  }
-  refreshTemarios();
 
-  /*
-  * if given group is the selected group, deselect it
-  * else, select the given group
-  */
-  $scope.toggleGroup = function(title) {
-    if ($scope.isGroupShown(title)) {
-      $scope.shownGroup = null;
-    } else {
-      $scope.shownGroup = title;
+    function refreshTemarios() {
+
+      // For spinner's loading control
+      $scope.loading = true;
+      $scope.titles = [];
+      $scope.contents = [];
+      CoursesService.listCourseTemariosByInfoCourse($stateParams.courseId)
+      .then(function(successResponse) {
+        $scope.temarios = successResponse;
+        $scope.courseTemarios = [];
+        //console.log($scope.temarios[0].titulo);
+        for (var i = 0; i < $scope.temarios.length; i++) {
+
+          $scope.courseTemarios[i] = {
+            title: $scope.temarios[i].titulo,
+            content: $scope.temarios[i].contenido
+          };
+        }
+        console.log($scope.courseTemarios);
+
+      }).finally(function() {
+        // after request is done, spinner will disappear
+        $scope.loading = false;
+      });
     }
-  };
-  $scope.isGroupShown = function(title) {
-    return $scope.shownGroup === title;
-  };
+    refreshTemarios();
 
-})
-
-.controller('LoginCtrl', function($scope, auth, $state, store) {
-
-  function doAuth() {
-    auth.signin({
-      closable: false,
-      // This asks for the refresh token
-      // So that the user never has to log in again
-      authParams: {
-        scope: 'openid offline_access'
+    /*
+    * if given group is the selected group, deselect it
+    * else, select the given group
+    */
+    $scope.toggleGroup = function(title) {
+      if ($scope.isGroupShown(title)) {
+        $scope.shownGroup = null;
+      } else {
+        $scope.shownGroup = title;
       }
-    }, function(profile, idToken, accessToken, state, refreshToken) {
-      //$scope.isAuthenticated = auth.isAuthenticated;
-      store.set('profile', profile);
-      store.set('token', idToken);
-      store.set('refreshToken', refreshToken);
-      $state.go('app.login');
-    }, function(error) {
-      console.log("There was an error logging in", error);
+    };
+    $scope.isGroupShown = function(title) {
+      return $scope.shownGroup === title;
+    };
+
+  })
+
+  .controller('LoginCtrl', function($scope, auth, $state, store) {
+
+    function doAuth() {
+      auth.signin({
+        closable: false,
+        // This asks for the refresh token
+        // So that the user never has to log in again
+        authParams: {
+          scope: 'openid offline_access'
+        }
+      }, function(profile, idToken, accessToken, state, refreshToken) {
+        //$scope.isAuthenticated = auth.isAuthenticated;
+        store.set('profile', profile);
+        store.set('token', idToken);
+        store.set('refreshToken', refreshToken);
+        $state.go('app.login');
+      }, function(error) {
+        console.log("There was an error logging in", error);
+      });
+    }
+
+    $scope.$on('$ionic.reconnectScope', function() {
+      doAuth();
     });
-  }
 
-  $scope.$on('$ionic.reconnectScope', function() {
     doAuth();
+
+    $scope.auth = auth;
+
   });
-
-  doAuth();
-
-  $scope.auth = auth;
-
-});

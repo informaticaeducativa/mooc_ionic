@@ -34,6 +34,7 @@ angular.module('mooc', ['ionic', 'mooc.controllers', 'mooc.services',
 
     .state('app.login', {
       url: '/login',
+      cache: false,
       views: {
         'menuContent': {
           templateUrl: 'templates/login.html',
