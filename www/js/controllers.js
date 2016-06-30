@@ -115,24 +115,35 @@ angular.module('mooc.controllers', ['ngSanitize'])
     $state.go($state.current, {}, {reload: true});
   };
 
-  $ionicHistory.nextViewOptions({
-    disableBack: true
-  });
-
 })
 
 .controller('CourseDetailCtrl', function($scope, $stateParams, $state, auth,
-  CoursesService, UsersService, UserCoursesService, $rootScope) {
+  CoursesService, UsersService, UserCoursesService, $rootScope, $ionicHistory) {
 
     CoursesService.get($stateParams.courseId).then(function(successResponse) {
       $scope.course = successResponse;
       console.log(successResponse.id_curso);
-      
+
       UsersService.getUser(auth.profile.identities[0].user_id)
       .then(function(successResponse) {
         $scope.loading = true;
         $scope.user = successResponse;
-        console.log('user: ' + $scope.user.id);
+
+        function verifyOwnCourse() {
+          UserCoursesService.listUserCourses($scope.user.id)
+          .then(function(successResponse) {
+            userCoursesTable = successResponse;
+            userCourseIds = [];
+            $scope.ownCourse = false;
+            for (var i = 0; i < userCoursesTable.length; i++) {
+              userCourseIds[i] = userCoursesTable[i].id_curso;
+              if ($stateParams.courseId == userCourseIds[i]) {
+                $scope.ownCourse = true;
+              }
+            }
+          })
+        }
+        verifyOwnCourse();
 
         userCourseData = {
           user_id: $scope.user.id,
@@ -194,6 +205,10 @@ angular.module('mooc.controllers', ['ngSanitize'])
     $scope.isGroupShown = function(title) {
       return $scope.shownGroup === title;
     };
+
+    $ionicHistory.nextViewOptions({
+      disableBack: true
+    });
 
   })
 

@@ -40,11 +40,15 @@
           <p>ID: {{profe.id}}</p>
         </ion-item>
 
-        <button class="button button-block button-positive"
-        ng-click="save()">Inscribirme</button>
+        <a ng-if="ownCourse && auth.isAuthenticated" class="button button-block button-positive" href="#">
+          Seguir al curso
+        </a>
+
+        <button ng-if="!ownCourse && auth.isAuthenticated" class="button button-block button-positive" ng-click="save()">
+          Inscribirme
+        </button>
 
       </ion-list>
-
 
     </section>
 
