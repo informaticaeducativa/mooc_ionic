@@ -10,9 +10,9 @@ angular.module('mooc.controllers', ['ngSanitize'])
   $scope.auth = auth;
 
   function refreshUsers() {
+    $scope.loading = true;
     UsersService.getUser(auth.profile.identities[0].user_id)
     .then(function(successResponse) {
-      $scope.loading = true;
       $scope.user = successResponse;
       console.log('user: ' + $scope.user.id);
     })
