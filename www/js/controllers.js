@@ -12,8 +12,8 @@ angular.module('mooc.controllers', ['ngSanitize'])
   function refreshUsers() {
     $scope.loading = true;
     UsersService.getUser(auth.profile.identities[0].user_id)
-    .then(function(successResponse) {
-      $scope.user = successResponse;
+    .then(function(data) {
+      $scope.user = data;
       console.log('user: ' + $scope.user.id);
     })
     .finally(function(){
@@ -40,24 +40,24 @@ angular.module('mooc.controllers', ['ngSanitize'])
   $scope.auth = auth;
 
   function refreshUserCourses() {
+    // For spinner's loading control
+    $scope.loading = true;
     UsersService.getUser(auth.profile.identities[0].user_id)
-    .then(function(successResponse) {
-      // For spinner's loading control
-      $scope.loading = true;
-      $scope.user = successResponse;
+    .then(function(data) {
+      $scope.user = data;
       //console.log('user: ' + $scope.user.id);
 
       UserCoursesService.listUserCourses($scope.user.id)
-      .then(function(successResponse) {
-        userCoursesTable = successResponse;
+      .then(function(data) {
+        userCoursesTable = data;
         userCourseIds = [];
         $scope.userCourses = [];
         for (var i = 0; i < userCoursesTable.length; i++) {
           userCourseIds[i] = userCoursesTable[i].id_curso;
         }
         userCourseIds = userCourseIds.sort();
-        CoursesService.list().then(function(successResponse) {
-          courses = successResponse;
+        CoursesService.list().then(function(data) {
+          courses = data;
           courses = courses.sort(function (a,b) {
             return a.id_curso - b.id_curso;
           });
@@ -94,8 +94,8 @@ angular.module('mooc.controllers', ['ngSanitize'])
   function refreshCourses() {
     // For spinner's loading control
     $scope.loading = true;
-    CoursesService.list().then(function(successResponse) {
-      $scope.courses = successResponse;
+    CoursesService.list().then(function(data) {
+      $scope.courses = data;
       console.log($scope.courses);
     }).finally(function() {
       // after request is done, spinner will disappear
@@ -105,34 +105,24 @@ angular.module('mooc.controllers', ['ngSanitize'])
   }
   refreshCourses();
 
-  $scope.logout = function() {
-    auth.signout();
-    store.remove('token');
-    store.remove('profile');
-    store.remove('refreshToken');
-    //$window.location.reload(true);
-    //console.log(auth.isAuthenticated);
-    $state.go($state.current, {}, {reload: true});
-  };
-
 })
 
 .controller('CourseDetailCtrl', function($scope, $stateParams, $state, auth,
   CoursesService, UsersService, UserCoursesService, $rootScope, $ionicHistory) {
 
-    CoursesService.get($stateParams.courseId).then(function(successResponse) {
-      $scope.course = successResponse;
-      console.log(successResponse.id_curso);
+    CoursesService.get($stateParams.courseId).then(function(data) {
+      $scope.course = data;
+      console.log(data.id_curso);
 
       UsersService.getUser(auth.profile.identities[0].user_id)
-      .then(function(successResponse) {
+      .then(function(data) {
         $scope.loading = true;
-        $scope.user = successResponse;
+        $scope.user = data;
 
         function verifyOwnCourse() {
           UserCoursesService.listUserCourses($scope.user.id)
-          .then(function(successResponse) {
-            userCoursesTable = successResponse;
+          .then(function(data) {
+            userCoursesTable = data;
             userCourseIds = [];
             $scope.ownCourse = false;
             for (var i = 0; i < userCoursesTable.length; i++) {
@@ -171,18 +161,17 @@ angular.module('mooc.controllers', ['ngSanitize'])
       $scope.titles = [];
       $scope.contents = [];
       CoursesService.listCourseTemariosByInfoCourse($stateParams.courseId)
-      .then(function(successResponse) {
-        $scope.temarios = successResponse;
+      .then(function(data) {
+        $scope.temarios = data;
         $scope.courseTemarios = [];
         //console.log($scope.temarios[0].titulo);
         for (var i = 0; i < $scope.temarios.length; i++) {
-
           $scope.courseTemarios[i] = {
             title: $scope.temarios[i].titulo,
             content: $scope.temarios[i].contenido
           };
         }
-        console.log($scope.courseTemarios);
+        //console.log($scope.courseTemarios);
 
       }).finally(function() {
         // after request is done, spinner will disappear
@@ -212,34 +201,67 @@ angular.module('mooc.controllers', ['ngSanitize'])
 
   })
 
-  .controller('ClassesCtrl', function($scope, ClassesService, auth, $state) {
+  .controller('ClassesCtrl', function($scope, ClassesService, auth, $stateParams) {
 
     $scope.auth = auth;
 
     function refreshClasses() {
       // For spinner's loading control
       $scope.loading = true;
-      ClassesService.list().then(function(successResponse) {
-        $scope.courses = successResponse;
-        console.log($scope.courses);
+      ClassesService.list($stateParams.courseId).then(function(data) {
+        $scope.classes = data;
+        $scope.classes = $scope.classes.sort(function (a,b) {
+          return a.semana - b.semana;
+        });
+        console.log($scope.classes);
+        $scope.courseClasses = [];
+        classNames = [];
+        weekIndex = 1;
+        for (var i = 0; i < $scope.classes.length; i++) {
+          if ($scope.classes[i].semana == weekIndex) {
+            classNames.push($scope.classes[i].nombre);
+            $scope.courseClasses[i] = {
+              id: $scope.classes[i].id_leccion,
+              week: weekIndex,
+              classNames: classNames
+            }
+          } else if ($scope.classes[i].semana == (weekIndex + 1)) {
+              weekIndex ++;
+              classNames = new Array();
+              classNames.push($scope.classes[i].nombre);
+              $scope.courseClasses[i] = {
+                id: $scope.classes[i].id_leccion,
+                week: weekIndex,
+                classNames: classNames
+              };
+            }
+          // } else {
+          //   weekIndex ++;
+          // }
+          console.log('semana: ' + $scope.classes[i].semana);
+          console.log('weekIndex: ' + weekIndex);
+          console.log('week: ' + $scope.courseClasses[i].week);
+          console.log('class names: ' + $scope.courseClasses[i].classNames);
+        }
+        console.log($scope.courseClasses);
       }).finally(function() {
         // after request is done, spinner will disappear
         $scope.loading = false;
       });
-      return $scope.courses;
+      return $scope.courseClasses;
     }
-    refreshCourses();
+    refreshClasses();
 
-    $scope.logout = function() {
-      auth.signout();
-      store.remove('token');
-      store.remove('profile');
-      store.remove('refreshToken');
-      //$window.location.reload(true);
-      //console.log(auth.isAuthenticated);
-      $state.go($state.current, {}, {reload: true});
+    $scope.toggleGroup = function(name) {
+      if ($scope.isGroupShown(name)) {
+        $scope.shownGroup = null;
+      } else {
+        $scope.shownGroup = name;
+      }
     };
-
+    $scope.isGroupShown = function(name) {
+      return $scope.shownGroup === name;
+    };
   })
 
   .controller('LoginCtrl', function($scope, auth, $state, store) {

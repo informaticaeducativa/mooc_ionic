@@ -28,3 +28,7 @@
 .list .item.item-accordion.ng-hide-remove {
   display: block !important;
 }
+
+.list a {
+	text-decoration: none;
+}

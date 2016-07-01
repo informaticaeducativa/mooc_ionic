@@ -1,8 +1,6 @@
 <ion-view view-title="{{course.nombre}}" >
   <ion-content>
-
     <section class="card">
-
       <article class="item item-text-wrap">
         <ion-spinner ng-show="loading"></ion-spinner>
         <img ng-src="http://informaticaeducativaucc.com/imagenes/{{ course.imagen_presentacion }}" width="100%">
@@ -39,18 +37,14 @@
           <h3>{{profe.nombre}}</h3>
           <p>ID: {{profe.id}}</p>
         </ion-item>
-
-        <a ng-if="ownCourse && auth.isAuthenticated" class="button button-block button-positive" href="#">
+        <a ng-if="ownCourse && auth.isAuthenticated" class="button button-block button-positive" href="#/app/classes/{{course.id_curso}}">
           Seguir al curso
         </a>
-
         <button ng-if="!ownCourse && auth.isAuthenticated" class="button button-block button-positive" ng-click="save()">
           Inscribirme
         </button>
 
       </ion-list>
-
     </section>
-
   </ion-content>
 </ion-view>

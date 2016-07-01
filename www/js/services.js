@@ -72,7 +72,7 @@ app.factory('ClassesService', function($http) {
   var apiUrl = 'http://informaticaeducativaucc.com/api';
   return {
     list: function(course_id) {
-      return $http.get(apiUrl + 'classes?course_id=' + course_id).then(function(response) {
+      return $http.get(apiUrl + '/classes?course_id=' + course_id).then(function(response) {
         return response.data;
       });
     }

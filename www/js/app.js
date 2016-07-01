@@ -86,7 +86,7 @@ angular.module('mooc', ['ionic', 'mooc.controllers', 'mooc.services',
     })
 
     .state('app.classes', {
-      url: '/classes/',
+      url: '/classes/:courseId',
       views: {
         'menuContent': {
           templateUrl: 'templates/classes.html',
