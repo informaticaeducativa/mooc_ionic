@@ -1,0 +1,15 @@
+<ion-view view-title="Clases" >
+  <ion-content>
+    <ion-list>
+      <ion-spinner ng-show="loading"></ion-spinner>
+      <ion-item class="item item-thumbnail"
+      ng-repeat="class in classes" href="#/app/classes/{{class.id_leccion}}">
+        <div class="list">
+          <!-- <img ng-src="http://informaticaeducativaucc.com/imagenes/{{ class.imagen_presentacion }}" width="200px"> -->
+          <h2>{{class.nombre}}</h2>
+          <h4></h4>
+        </div>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>

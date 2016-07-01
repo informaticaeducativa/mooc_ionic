@@ -212,6 +212,36 @@ angular.module('mooc.controllers', ['ngSanitize'])
 
   })
 
+  .controller('ClassesCtrl', function($scope, ClassesService, auth, $state) {
+
+    $scope.auth = auth;
+
+    function refreshClasses() {
+      // For spinner's loading control
+      $scope.loading = true;
+      ClassesService.list().then(function(successResponse) {
+        $scope.courses = successResponse;
+        console.log($scope.courses);
+      }).finally(function() {
+        // after request is done, spinner will disappear
+        $scope.loading = false;
+      });
+      return $scope.courses;
+    }
+    refreshCourses();
+
+    $scope.logout = function() {
+      auth.signout();
+      store.remove('token');
+      store.remove('profile');
+      store.remove('refreshToken');
+      //$window.location.reload(true);
+      //console.log(auth.isAuthenticated);
+      $state.go($state.current, {}, {reload: true});
+    };
+
+  })
+
   .controller('LoginCtrl', function($scope, auth, $state, store) {
 
     function doAuth() {
