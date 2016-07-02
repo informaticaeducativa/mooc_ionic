@@ -216,21 +216,25 @@ angular.module('mooc.controllers', ['ngSanitize'])
         //console.log($scope.classes);
         $scope.courseClasses = [];
         classNames = [];
+        id = [];
         weekIndex = 1;
         for (var i = 0; i < $scope.classes.length; i++) {
           if ($scope.classes[i].semana == weekIndex) {
             classNames.push($scope.classes[i].nombre);
+            id.push($scope.classes[i].id_leccion);
             $scope.courseClasses[i] = {
-              id: $scope.classes[i].id_leccion,
+              id: id,
               week: weekIndex,
               classNames: classNames
             }
           } else if ($scope.classes[i].semana == (weekIndex + 1)) {
             weekIndex ++;
             classNames = new Array();
+            id = new Array();
             classNames.push($scope.classes[i].nombre);
+            id.push($scope.classes[i].id_leccion);
             $scope.courseClasses[i] = {
-              id: $scope.classes[i].id_leccion,
+              id: id,
               week: weekIndex,
               classNames: classNames
             };
@@ -238,6 +242,8 @@ angular.module('mooc.controllers', ['ngSanitize'])
           console.log($scope.courseClasses[i].id);
           //$scope.courseClasses[i].clasNames[i];
         }
+        console.log($scope.courseClasses[1].id);
+        console.log($scope.courseClasses[2].id);
         //console.log($scope.courseClasses);
       }).finally(function() {
         // after request is done, spinner will disappear
