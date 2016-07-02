@@ -239,7 +239,7 @@ angular.module('mooc.controllers', ['ngSanitize'])
               classNames: classNames
             };
           }
-          console.log($scope.courseClasses[i].id);
+          //console.log($scope.courseClasses[i].id);
           //$scope.courseClasses[i].clasNames[i];
         }
         console.log($scope.courseClasses[1].id);
@@ -252,6 +252,71 @@ angular.module('mooc.controllers', ['ngSanitize'])
       return $scope.courseClasses;
     }
     refreshClasses();
+
+    $scope.toggleGroup = function(week) {
+      if ($scope.isGroupShown(week)) {
+        $scope.shownGroup = null;
+      } else {
+        $scope.shownGroup = week;
+      }
+    };
+    $scope.isGroupShown = function(week) {
+      return $scope.shownGroup === week;
+    };
+  })
+
+  .controller('TestsCtrl', function($scope, TestsService, auth, $stateParams, $ionicHistory) {
+
+    function refreshTests() {
+      courseId = $ionicHistory.backView().stateParams.courseId;
+      // For spinner's loading control
+      $scope.loading = true;
+      TestsService.list(courseId).then(function(data) {
+        $scope.tests = data;
+        $scope.tests = $scope.tests.sort(function (a,b) {
+          return a.semana - b.semana;
+        });
+        //console.log($scope.tests);
+        $scope.courseTests = [];
+        testNames = [];
+        id = [];
+        weekIndex = 1;
+        for (var i = 0; i < $scope.tests.length; i++) {
+          if ($scope.tests[i].semana == weekIndex) {
+            testNames.push($scope.tests[i].nombre);
+            id.push($scope.tests[i].id_evaluacion);
+            $scope.courseTests[i] = {
+              id: id,
+              week: weekIndex,
+              testNames: testNames
+            }
+          } else if ($scope.tests[i].semana == (weekIndex + 1)) {
+            weekIndex ++;
+            testNames = new Array();
+            id = new Array();
+            testNames.push($scope.tests[i].nombre);
+            id.push($scope.tests[i].id_evaluacion);
+            $scope.courseTests[i] = {
+              id: id,
+              week: weekIndex,
+              testNames: testNames
+            };
+          }
+          console.log($scope.courseTests[i].id);
+          $scope.courseTests[i].nombre;
+        }
+        console.log($scope.courseTests[1].id);
+        console.log($scope.courseTests[2].id);
+        //console.log($scope.courseClasses);
+      }).finally(function() {
+        // after request is done, spinner will disappear
+        $scope.loading = false;
+      });
+      return $scope.courseTests;
+    }
+    refreshTests();
+
+    console.log('course_id (backView): ' + $ionicHistory.backView().stateParams.courseId);
 
     $scope.toggleGroup = function(week) {
       if ($scope.isGroupShown(week)) {

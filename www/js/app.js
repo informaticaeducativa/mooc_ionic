@@ -107,6 +107,17 @@ angular.module('mooc', ['ionic', 'mooc.controllers', 'mooc.services',
           controller: 'ClassDetailCtrl'
         }
       }
+    })
+
+    .state('app.tests', {
+      url: '/tests/:courseId',
+      cache: false,
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/tests.html',
+          controller: 'TestsCtrl'
+        }
+      }
     });
 
     // if none of the above states are matched, use this as the fallback

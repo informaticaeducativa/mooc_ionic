@@ -10,7 +10,7 @@ app.factory('UsersService', function($http) {
       });
     }
   };
-})
+});
 
 app.factory('UserCoursesService', function($http) {
   var apiUrl = 'http://informaticaeducativaucc.com/api';
@@ -35,7 +35,7 @@ app.factory('UserCoursesService', function($http) {
     }
 
   };
-})
+});
 
 app.factory('CoursesService', function($http) {
 
@@ -66,7 +66,7 @@ app.factory('CoursesService', function($http) {
 
   };
 
-})
+});
 
 app.factory('ClassesService', function($http) {
   var apiUrl = 'http://informaticaeducativaucc.com/api';
@@ -78,6 +78,22 @@ app.factory('ClassesService', function($http) {
     },
     get: function(classId) {
       return $http.get(apiUrl + '/class/' + classId).then(function(response) {
+        return response.data[0];
+      });
+    }
+  }
+});
+
+app.factory('TestsService', function($http) {
+  var apiUrl = 'http://informaticaeducativaucc.com/api';
+  return {
+    list: function(courseId) {
+      return $http.get(apiUrl + '/tests?course_id=' + courseId).then(function(response) {
+        return response.data;
+      });
+    },
+    get: function(testId) {
+      return $http.get(apiUrl + '/class/', testId).then(function(response) {
         return response.data[0];
       });
     }
