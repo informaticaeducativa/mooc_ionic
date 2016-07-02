@@ -112,7 +112,7 @@ angular.module('mooc.controllers', ['ngSanitize'])
 
     CoursesService.get($stateParams.courseId).then(function(data) {
       $scope.course = data;
-      console.log(data.id_curso);
+      //console.log(data.id_curso);
 
       UsersService.getUser(auth.profile.identities[0].user_id)
       .then(function(data) {
@@ -127,7 +127,7 @@ angular.module('mooc.controllers', ['ngSanitize'])
             $scope.ownCourse = false;
             for (var i = 0; i < userCoursesTable.length; i++) {
               userCourseIds[i] = userCoursesTable[i].id_curso;
-              if ($stateParams.courseId === userCourseIds[i]) {
+              if ($stateParams.courseId == userCourseIds[i]) {
                 $scope.ownCourse = true;
               }
             }
@@ -218,14 +218,14 @@ angular.module('mooc.controllers', ['ngSanitize'])
         classNames = [];
         weekIndex = 1;
         for (var i = 0; i < $scope.classes.length; i++) {
-          if ($scope.classes[i].semana === weekIndex) {
+          if ($scope.classes[i].semana == weekIndex) {
             classNames.push($scope.classes[i].nombre);
             $scope.courseClasses[i] = {
               id: $scope.classes[i].id_leccion,
               week: weekIndex,
               classNames: classNames
             }
-          } else if ($scope.classes[i].semana === (weekIndex + 1)) {
+          } else if ($scope.classes[i].semana == (weekIndex + 1)) {
             weekIndex ++;
             classNames = new Array();
             classNames.push($scope.classes[i].nombre);
@@ -235,6 +235,8 @@ angular.module('mooc.controllers', ['ngSanitize'])
               classNames: classNames
             };
           }
+          console.log($scope.courseClasses[i].id);
+          //$scope.courseClasses[i].clasNames[i];
         }
         //console.log($scope.courseClasses);
       }).finally(function() {
@@ -263,12 +265,15 @@ angular.module('mooc.controllers', ['ngSanitize'])
       $scope.loading = true;
       ClassesService.get($stateParams.classId).then(function(data) {
         $scope.class = data;
-        console.log($scope.class.nombre);
-        console.log($scope.class.contenido_grafico);
-        console.log($scope.class.contenido_texto);
+        console.log($stateParams.classId);
+        //console.log($scope.class.id_leccion);
+        //console.log($scope.class.nombre);
+        //console.log($scope.class.contenido_grafico);
+        //console.log($scope.class.contenido_texto);
         $scope.class.contenido_grafico = $scope.class.contenido_grafico.replace("560", "330");
         $scope.class.contenido_grafico = $scope.class.contenido_grafico.replace("420", "330");
-        console.log($scope.class.contenido_grafico);
+        $scope.class.contenido_grafico = $scope.class.contenido_grafico.replace("315", "280");
+        //console.log($scope.class.contenido_grafico);
       }).finally(function() {
         // after request is done, spinner will disappear
         $scope.loading = false;
