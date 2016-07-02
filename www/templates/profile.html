@@ -1,7 +1,23 @@
 <ion-view view-title="Mi Perfil" >
 
   <ion-content>
-    <h1>Tu ID es: {{user_id}}</h1>
+    <ion-spinner ng-show="loading"></ion-spinner>
+    <div class="list card">
+      <div class="item item-avatar">
+        <img src="{{user.foto}}">
+        <h2>{{user.nombre}}</h2>
+        <p>{{user.tipo_usuario}}</p>
+        <p>{{user.universidad}}</p>
+        <p>{{user.ciudad}}</p>
+        <p>{{user.pais}}</p>
+      </div>
+
+      <button class="button button-positive button-block" ng-click="logout()">
+        Salir
+      </button>
+
+    </div>
+
   </ion-content>
 
 </ion-view>

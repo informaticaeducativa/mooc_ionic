@@ -1,6 +1,6 @@
 {
   "name": "mooc-ucc",
-  "version": "1.2.1",
+  "version": "1.5.2",
   "description": "An Ionic project",
   "dependencies": {
     "gulp": "^3.5.6",
@@ -16,15 +16,15 @@
     "shelljs": "^0.3.0"
   },
   "cordovaPlugins": [
-    "cordova-plugin-device",
     "cordova-plugin-console",
-    "cordova-plugin-whitelist",
+    "cordova-plugin-device",
+    "cordova-plugin-inappbrowser",
     "cordova-plugin-splashscreen",
     "cordova-plugin-statusbar",
-    "ionic-plugin-keyboard",
-    "cordova-plugin-inappbrowser"
+    "cordova-plugin-whitelist",
+    "ionic-plugin-keyboard"
   ],
   "cordovaPlatforms": [
-    "android"
+    "ios"
   ]
 }

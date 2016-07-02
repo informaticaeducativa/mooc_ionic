@@ -1,0 +1,28 @@
+<ion-view view-title="home">
+  <ion-tabs class="tabs-icon-only tabs-top tabs-background-balanced tabs-color-light">
+    <!-- Video Tab -->
+    <ion-tab title="Video" icon-off="ion-social-youtube-outline" icon-on="ion-social-youtube">
+      <ion-nav-view name="video">
+        <ion-content padding="true" has-header="false">
+          <section class="card">
+            <article class="item">
+              <div ng-bind-html="getTrustedHTML(class.contenido_grafico)"></div>
+            </article>
+          </section>
+        </ion-content>
+      </ion-nav-view>
+    </ion-tab>
+    <!-- Text Tab -->
+    <ion-tab title="Texto" icon-off="ion-ios-book-outline" icon-on="ion-ios-book">
+      <ion-nav-view name="text">
+        <ion-content padding="true" has-header="false">
+          <section class="card">
+            <article class="item item-text-wrap">
+              <p ng-bind-html="getTrustedHTML(class.contenido_texto)"></p>
+            </article>
+          </section>
+        </ion-content>
+      </ion-nav-view>
+    </ion-tab>
+  </ion-tabs>
+</ion-view>
