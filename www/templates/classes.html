@@ -4,19 +4,18 @@
       <ion-spinner ng-show="loading"></ion-spinner>
       <div ng-repeat="class in courseClasses">
         <ion-item class="item-stable" ng-if="class.week != courseClasses[$index - 1].week"
-        ng-click="toggleGroup(class)"
-        ng-class="{active: isGroupShown(class)}">
-        <i class="icon" ng-class="isGroupShown(class) ? 'ion-minus' : 'ion-plus'"></i>
-        &nbsp;
-        Semana {{class.week}}
-      </ion-item>
-      <div ng-show="isGroupShown(class)">
-        <ion-item class="item-accordion" ng-repeat="weekClassName in class.classNames" href="#/app/class/{{class.id[$index]}}">
-          id de clase: {{class.id[$index]}}
-          {{weekClassName}}
+          ng-click="toggleGroup(class)"
+          ng-class="{active: isGroupShown(class)}">
+          <i class="icon" ng-class="isGroupShown(class) ? 'ion-minus' : 'ion-plus'"></i>
+          &nbsp;
+          Semana {{class.week}}
         </ion-item>
+        <div ng-show="isGroupShown(class)">
+          <ion-item class="item-accordion" ng-repeat="weekClassName in class.classNames" href="#/app/class/{{class.id[$index]}}">
+            {{weekClassName}}
+          </ion-item>
+        </div>
       </div>
-    </div>
-  </ion-list>
-</ion-content>
+    </ion-list>
+  </ion-content>
 </ion-view>
