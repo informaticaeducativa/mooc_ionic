@@ -112,7 +112,7 @@ angular.module('mooc.controllers', ['ngSanitize'])
 
     CoursesService.get($stateParams.courseId).then(function(data) {
       $scope.course = data;
-      console.log(data.id_curso);
+      //console.log(data.id_curso);
 
       UsersService.getUser(auth.profile.identities[0].user_id)
       .then(function(data) {
@@ -195,9 +195,9 @@ angular.module('mooc.controllers', ['ngSanitize'])
       return $scope.shownGroup === title;
     };
 
-    $ionicHistory.nextViewOptions({
-      disableBack: true
-    });
+    // $ionicHistory.nextViewOptions({
+    //   disableBack: true
+    // });
 
   })
 
@@ -213,7 +213,7 @@ angular.module('mooc.controllers', ['ngSanitize'])
         $scope.classes = $scope.classes.sort(function (a,b) {
           return a.semana - b.semana;
         });
-        console.log($scope.classes);
+        //console.log($scope.classes);
         $scope.courseClasses = [];
         classNames = [];
         weekIndex = 1;
@@ -226,24 +226,19 @@ angular.module('mooc.controllers', ['ngSanitize'])
               classNames: classNames
             }
           } else if ($scope.classes[i].semana == (weekIndex + 1)) {
-              weekIndex ++;
-              classNames = new Array();
-              classNames.push($scope.classes[i].nombre);
-              $scope.courseClasses[i] = {
-                id: $scope.classes[i].id_leccion,
-                week: weekIndex,
-                classNames: classNames
-              };
-            }
-          // } else {
-          //   weekIndex ++;
-          // }
-          console.log('semana: ' + $scope.classes[i].semana);
-          console.log('weekIndex: ' + weekIndex);
-          console.log('week: ' + $scope.courseClasses[i].week);
-          console.log('class names: ' + $scope.courseClasses[i].classNames);
+            weekIndex ++;
+            classNames = new Array();
+            classNames.push($scope.classes[i].nombre);
+            $scope.courseClasses[i] = {
+              id: $scope.classes[i].id_leccion,
+              week: weekIndex,
+              classNames: classNames
+            };
+          }
+          console.log($scope.courseClasses[i].id);
+          //$scope.courseClasses[i].clasNames[i];
         }
-        console.log($scope.courseClasses);
+        //console.log($scope.courseClasses);
       }).finally(function() {
         // after request is done, spinner will disappear
         $scope.loading = false;
@@ -252,16 +247,44 @@ angular.module('mooc.controllers', ['ngSanitize'])
     }
     refreshClasses();
 
-    $scope.toggleGroup = function(name) {
-      if ($scope.isGroupShown(name)) {
+    $scope.toggleGroup = function(week) {
+      if ($scope.isGroupShown(week)) {
         $scope.shownGroup = null;
       } else {
-        $scope.shownGroup = name;
+        $scope.shownGroup = week;
       }
     };
-    $scope.isGroupShown = function(name) {
-      return $scope.shownGroup === name;
+    $scope.isGroupShown = function(week) {
+      return $scope.shownGroup === week;
     };
+  })
+
+  .controller('ClassDetailCtrl', function($scope, $stateParams, ClassesService, $sce) {
+
+    function refreshClass() {
+      $scope.loading = true;
+      ClassesService.get($stateParams.classId).then(function(data) {
+        $scope.class = data;
+        console.log($stateParams.classId);
+        //console.log($scope.class.id_leccion);
+        //console.log($scope.class.nombre);
+        //console.log($scope.class.contenido_grafico);
+        //console.log($scope.class.contenido_texto);
+        $scope.class.contenido_grafico = $scope.class.contenido_grafico.replace("560", "330");
+        $scope.class.contenido_grafico = $scope.class.contenido_grafico.replace("420", "330");
+        $scope.class.contenido_grafico = $scope.class.contenido_grafico.replace("315", "280");
+        //console.log($scope.class.contenido_grafico);
+      }).finally(function() {
+        // after request is done, spinner will disappear
+        $scope.loading = false;
+      });
+    }
+
+    $scope.getTrustedHTML = function(str){
+      return $sce.trustAsHtml(str);
+    }
+
+    refreshClass();
   })
 
   .controller('LoginCtrl', function($scope, auth, $state, store) {
