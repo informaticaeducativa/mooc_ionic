@@ -1,5 +1,6 @@
 
-angular.module('mooc', ['ionic', 'mooc.controllers'])
+angular.module('mooc', ['ionic', 'mooc.controllers', 'mooc.services',
+'auth0', 'angular-storage', 'angular-jwt'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -15,53 +16,148 @@ angular.module('mooc', ['ionic', 'mooc.controllers'])
   });
 })
 
-.config(function($stateProvider, $urlRouterProvider) {
-  $stateProvider
+.config(function($stateProvider, $urlRouterProvider,
+  authProvider, jwtInterceptorProvider, $httpProvider) {
 
-  .state('app', {
-    url: '/app',
-    abstract: true,
-    templateUrl: 'templates/menu.html'
-  })
 
-  .state('app.search', {
-    url: '/search',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/search.html'
-      }
-    }
-  })
+    $stateProvider
 
-  .state('app.browse', {
-      url: '/browse',
+    .state('app', {
+      url: '/app',
+      //abstract: true,
+      templateUrl: 'templates/menu.html',
+      controller: 'MenuCtrl'
+      // data: {
+      //   requiresLogin: true
+      // }
+    })
+
+    .state('app.login', {
+      url: '/login',
+      cache: false,
       views: {
         'menuContent': {
-          templateUrl: 'templates/browse.html'
+          templateUrl: 'templates/login.html',
+          controller: 'LoginCtrl'
         }
       }
     })
+
+    .state('app.own-courses', {
+      url: '/own-courses',
+      cache: false,
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/own-courses.html',
+          controller: 'OwnCoursesCtrl'
+        }
+      }
+    })
+
+    .state('app.profile', {
+      url: '/profile',
+      cache: false,
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/profile.html',
+          controller: 'UserProfileCtrl'
+        }
+      }
+    })
+
     .state('app.courses', {
       url: '/courses',
+      cache: false,
       views: {
-        'courses': {
+        'menuContent': {
           templateUrl: 'templates/courses.html',
           controller: 'CoursesCtrl'
         }
       }
     })
 
-  .state('app.course', {
-    url: '/courses/:courseId',
-    views: {
-      'courses': {
-        templateUrl: 'templates/course.html',
-        controller: 'CourseDetailCtrl'
+    .state('app.course', {
+      url: '/courses/:courseId',
+      cache: false,
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/course.html',
+          controller: 'CourseDetailCtrl'
+        }
+      }
+    })
+
+    .state('app.classes', {
+      url: '/classes/:courseId',
+      cache: false,
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/classes.html',
+          controller: 'ClassesCtrl'
+        }
+      }
+    })
+
+    .state('app.class', {
+      url: '/class/:classId',
+      cache: false,
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/class.html',
+          controller: 'ClassDetailCtrl'
+        }
+      }
+    })
+
+    .state('app.tests', {
+      url: '/tests/:courseId',
+      cache: false,
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/tests.html',
+          controller: 'TestsCtrl'
+        }
+      }
+    });
+
+    // if none of the above states are matched, use this as the fallback
+    $urlRouterProvider.otherwise('/app/courses');
+
+    // Configure Auth0
+    authProvider.init({
+      domain: AUTH0_DOMAIN,
+      clientID: AUTH0_CLIENT_ID,
+      loginState: 'app.login'
+    });
+
+    jwtInterceptorProvider.tokenGetter = function(store, jwtHelper, auth) {
+      var idToken = store.get('token');
+      var refreshToken = store.get('refreshToken');
+      if (!idToken || !refreshToken) {
+        return null;
+      }
+      if (jwtHelper.isTokenExpired(idToken)) {
+        return auth.refreshIdToken(refreshToken).then(function(idToken) {
+          store.set('token', idToken);
+          return idToken;
+        });
+      } else {
+        return idToken;
       }
     }
+
+    $httpProvider.interceptors.push('jwtInterceptor');
+
+  }).run(function($rootScope, auth, store) {
+    $rootScope.$on('$locationChangeStart', function() {
+      if (!auth.isAuthenticated) {
+        var token = store.get('token');
+        if (token) {
+          auth.authenticate(store.get('profile'), token);
+        }
+      }
+
+    });
+
+
   });
-
-
-  // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/app/courses');
-});

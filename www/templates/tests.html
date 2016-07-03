@@ -1,0 +1,21 @@
+<ion-view view-title="Tareas" >
+  <ion-content>
+    <ion-list>
+      <ion-spinner ng-show="loading"></ion-spinner>
+      <div ng-repeat="test in courseTests">
+        <ion-item class="item-stable" ng-if="test.week != courseTests[$index - 1].week"
+          ng-click="toggleGroup(test)"
+          ng-class="{active: isGroupShown(test)}">
+          <i class="icon" ng-class="isGroupShown(test) ? 'ion-minus' : 'ion-plus'"></i>
+          &nbsp;
+          Semana {{test.week}}
+        </ion-item>
+        <div ng-show="isGroupShown(test)">
+          <ion-item class="item-accordion" ng-repeat="weekTestName in test.testNames" href="#/app/test/{{test.id[$index]}}">
+            {{weekTestName}}
+          </ion-item>
+        </div>
+      </div>
+    </ion-list>
+  </ion-content>
+</ion-view>

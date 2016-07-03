@@ -1,14 +1,15 @@
-<ion-view view-title="Cursos">
-  <ion-content>
-    <ion-list>
-      <ion-item class="item item-thumbnail" ng-repeat="course in courses" href="#/app/courses/{{course.id_curso}}">
-        <div class="list">
-
-          <img ng-src="http://informaticaeducativaucc.com/imagenes/{{ course.imagen_presentacion }}" width="200px">
-          <h2>{{course.nombre}}</h2>
-          <h4>{{course.nombre_tematica}}</h4>
-
-        </ion-item>
-      </ion-list>
-    </ion-content>
-  </ion-view>
+ <ion-view view-title="Cursos" >
+      <ion-content>
+        <ion-list>
+          <ion-spinner ng-show="loading"></ion-spinner>
+          <ion-item class="item item-thumbnail"
+          ng-repeat="course in courses" href="#/app/courses/{{course.id_curso}}">
+            <div class="list">
+              <img ng-src="http://informaticaeducativaucc.com/imagenes/{{ course.imagen_presentacion }}" width="200px">
+              <h2>{{course.nombre}}</h2>
+              <h4>{{course.nombre_tematica}}</h4>
+            </div>
+          </ion-item>
+        </ion-list>
+      </ion-content>
+</ion-view>
