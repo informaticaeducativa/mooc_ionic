@@ -93,8 +93,13 @@ app.factory('TestsService', function($http) {
       });
     },
     get: function(testId) {
-      return $http.get(apiUrl + '/class/', testId).then(function(response) {
+      return $http.get(apiUrl + '/test/' + testId).then(function(response) {
         return response.data[0];
+      });
+    },
+    listQuestions: function(testId) {
+      return $http.get(apiUrl + '/questions', testId).then(function(response) {
+        return response.data;
       });
     }
   }

@@ -118,7 +118,19 @@ angular.module('mooc', ['ionic', 'mooc.controllers', 'mooc.services',
           controller: 'TestsCtrl'
         }
       }
+    })
+
+    .state('app.test', {
+      url: '/test/:testId',
+      cache: false,
+      views: {
+        'menuContent': {
+          templateUrl: 'templates/test.html',
+          controller: 'TestDetailCtrl'
+        }
+      }
     });
+
 
     // if none of the above states are matched, use this as the fallback
     $urlRouterProvider.otherwise('/app/courses');

@@ -70,10 +70,6 @@ angular.module('mooc.controllers', ['ngSanitize'])
             if (courses[i].id_curso === userCourseIds[i]) {
               $scope.userCourses[i] = courses[i];
               $scope.userCourses[i]['tipo_relacion'] = userCoursesTable[i].tipo_relacion;
-              // console.log($scope.userCourses[i].tipo_relacion);
-              // console.log('userCourses ids: ' + $scope.userCourses[i].id_curso);
-              // console.log('userCoursesTable ids: ' + userCoursesTable[i].id_curso);
-              // console.log('profes asistentes: ' + $scope.userCourses[i].profesores_asistentes[i].nombre);
             }
           }
         })
@@ -356,6 +352,58 @@ angular.module('mooc.controllers', ['ngSanitize'])
     }
 
     refreshClass();
+  })
+
+  .controller('TestDetailCtrl', function($scope, $stateParams, TestsService) {
+
+    function refreshTest() {
+      TestsService.get($stateParams.testId).then(function(data) {
+        $scope.test = data;
+        console.log($scope.test);
+      }).finally(function() {
+        // after request is done, spinner will disappear
+        $scope.loading = false;
+      });
+    }
+    refreshTest();
+
+    function refrestQuestions() {
+      $scope.loading = true;
+      TestsService.listQuestions($stateParams.testId).then(function(data){
+        $scope.questions = data;
+        console.log($scope.questions[0]);
+
+        function $scope.isMultiple() {
+          multiple = false;
+          $scope.multiple_questions = [];
+          for (var i = 0;  i < $scope.questions.length; i++) {
+            if ($scope.questions[i].opcion_multiple == 'si') {
+              multiple = true;
+            }
+            if (multiple = true) {
+              $scope.multiple_questions[i] = {
+                question: $scope.questions[i].nombre,
+                a: $scope.questions[i].opcion_a,
+                b: $scope.questions[i].opcion_b,
+                c: $scope.questions[i].opcion_c,
+                d: $scope.questions[i].opcion_d
+              };
+              console.log('a: ' + $scope.multiple_questions[i].a);
+            }
+          }
+
+        }
+
+        $scope.isMultiple();
+
+      }).finally(function() {
+        // after request is done, spinner will disappear
+        $scope.loading = false;
+      });
+    }
+
+    refrestQuestions();
+
   })
 
   .controller('LoginCtrl', function($scope, auth, $state, store) {
