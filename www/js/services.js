@@ -98,7 +98,7 @@ app.factory('TestsService', function($http) {
       });
     },
     listQuestions: function(testId) {
-      return $http.get(apiUrl + '/questions', testId).then(function(response) {
+      return $http.get(apiUrl + '/questions?test_id='+ testId).then(function(response) {
         return response.data;
       });
     }

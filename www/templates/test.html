@@ -1,11 +1,14 @@
 <ion-view view-title="Evaluación">
-  <ion-content ng-if="isMultiple">
-    <h3>{{multiple_questions.question}}</h3>
+  <br/>
+  <ion-content>
     <ion-list>
-      <ion-radio ng-model="choice" ng-value="'a'">{{multiple_questions.opcion_a}}</ion-radio>
-      <ion-radio ng-model="choice" ng-value="'b'">{{multiple_questions.opcion_b}}</ion-radio>
-      <ion-radio ng-model="choice" ng-value="'c'">{{multiple_questions.opcion_c}}</ion-radio>
-      <ion-radio ng-model="choice" ng-value="'d'">{{multiple_questions.opcion_d}}</ion-radio>
+      <ion-item ng-repeat="multiple_question in multiple_questions">
+        <h3 ng-bind-html="multiple_question.question">{{multiple_question.question}}</h3>
+        <ion-radio ng-value="a">A: {{multiple_question.a}}</ion-radio>
+        <ion-radio ng-value="b">B: {{multiple_question.b}}</ion-radio>
+        <ion-radio ng-value="c">C: {{multiple_question.c}}</ion-radio>
+        <ion-radio ng-value="d">D: {{multiple_question.d}}</ion-radio>
+      </ion-item>
     </ion-list>
   </ion-content>
 </ion-view>

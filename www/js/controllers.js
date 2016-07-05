@@ -371,16 +371,15 @@ angular.module('mooc.controllers', ['ngSanitize'])
       $scope.loading = true;
       TestsService.listQuestions($stateParams.testId).then(function(data){
         $scope.questions = data;
-        console.log($scope.questions[0]);
+        console.log('questions by testId ' + $stateParams.testId + ': ' + $scope.questions);
 
-        function $scope.isMultiple() {
-          multiple = false;
+        function isMultiple() {
+          $scope.multiple = false;
           $scope.multiple_questions = [];
           for (var i = 0;  i < $scope.questions.length; i++) {
             if ($scope.questions[i].opcion_multiple == 'si') {
-              multiple = true;
-            }
-            if (multiple = true) {
+              $scope.multiple = true;
+
               $scope.multiple_questions[i] = {
                 question: $scope.questions[i].nombre,
                 a: $scope.questions[i].opcion_a,
@@ -388,13 +387,18 @@ angular.module('mooc.controllers', ['ngSanitize'])
                 c: $scope.questions[i].opcion_c,
                 d: $scope.questions[i].opcion_d
               };
+              console.log('question: ' + $scope.multiple_questions[i].question);
               console.log('a: ' + $scope.multiple_questions[i].a);
+
             }
+            // if ($scope.multiple = true) {
+            //
+            // }
           }
 
         }
 
-        $scope.isMultiple();
+        isMultiple();
 
       }).finally(function() {
         // after request is done, spinner will disappear
