@@ -1,32 +1,40 @@
-This is an addon starter template for the [Ionic Framework](http://ionicframework.com/).
+# MOOC UCC Mobile app (iOS/Android)
 
-## How to use this template
+## Instructions for running on dev environment
 
-*This template does not work on its own*. It is missing the Ionic library, and AngularJS.
+### Install NodeJS
 
-To use this, either create a new ionic project using the ionic node.js utility, or copy and paste this into an existing Cordova project and download a release of Ionic separately.
+#### Linux
 
-### With the Ionic tool:
+**Ubuntu/Debian**
 
-Take the name after `ionic-starter-`, and that is the name of the template to be used when using the `ionic start` command below:
+`sudo apt-get install nodejs`
 
-```bash
-$ sudo npm install -g ionic cordova
-$ ionic start myApp sidemenu
-```
+**Archlinux**
 
-Then, to run it, cd into `myApp` and run:
+`sudo pacman -S nodejs`
 
-```bash
-$ ionic platform add ios
-$ ionic build ios
-$ ionic emulate ios
-```
+#### Windows
 
-Substitute ios for android if not on a Mac, but if you can, the ios development toolchain is a lot easier to work with until you need to do anything custom to Android.
+Download the "Current" release (option)
 
-## Demo
-http://plnkr.co/edit/0RXSDB?p=preview
+[NodeJS](https://nodejs.org/en/download/)
 
-## Issues
-Issues have been disabled on this repo, if you do find an issue or have a question consider posting it on the [Ionic Forum](http://forum.ionicframework.com/).  Or else if there is truly an error, follow our guidelines for [submitting an issue](http://ionicframework.com/contribute/#issues) to the main Ionic repository. On the other hand, pull requests are welcome here!
+#### MacOSX
+
+Download from "Macintosh Installer"
+
+[NodeJS](https://nodejs.org/en/download/)
+
+### Installing Ionic and Apache Cordova
+
+Launch your Terminal and install cordova and ionic with npm:
+#### Linux and MacOSX
+`sudo npm install -g cordova`
+
+`sudo npm install -g ionic`
+
+#### Windows
+`npm install cordova`
+
+`npm install ionic`

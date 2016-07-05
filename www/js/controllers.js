@@ -70,10 +70,6 @@ angular.module('mooc.controllers', ['ngSanitize'])
             if (courses[i].id_curso === userCourseIds[i]) {
               $scope.userCourses[i] = courses[i];
               $scope.userCourses[i]['tipo_relacion'] = userCoursesTable[i].tipo_relacion;
-              // console.log($scope.userCourses[i].tipo_relacion);
-              // console.log('userCourses ids: ' + $scope.userCourses[i].id_curso);
-              // console.log('userCoursesTable ids: ' + userCoursesTable[i].id_curso);
-              // console.log('profes asistentes: ' + $scope.userCourses[i].profesores_asistentes[i].nombre);
             }
           }
         })
@@ -239,7 +235,7 @@ angular.module('mooc.controllers', ['ngSanitize'])
               classNames: classNames
             };
           }
-          console.log($scope.courseClasses[i].id);
+          //console.log($scope.courseClasses[i].id);
           //$scope.courseClasses[i].clasNames[i];
         }
         console.log($scope.courseClasses[1].id);
@@ -252,6 +248,71 @@ angular.module('mooc.controllers', ['ngSanitize'])
       return $scope.courseClasses;
     }
     refreshClasses();
+
+    $scope.toggleGroup = function(week) {
+      if ($scope.isGroupShown(week)) {
+        $scope.shownGroup = null;
+      } else {
+        $scope.shownGroup = week;
+      }
+    };
+    $scope.isGroupShown = function(week) {
+      return $scope.shownGroup === week;
+    };
+  })
+
+  .controller('TestsCtrl', function($scope, TestsService, auth, $stateParams, $ionicHistory) {
+
+    function refreshTests() {
+      courseId = $ionicHistory.backView().stateParams.courseId;
+      // For spinner's loading control
+      $scope.loading = true;
+      TestsService.list(courseId).then(function(data) {
+        $scope.tests = data;
+        $scope.tests = $scope.tests.sort(function (a,b) {
+          return a.semana - b.semana;
+        });
+        //console.log($scope.tests);
+        $scope.courseTests = [];
+        testNames = [];
+        id = [];
+        weekIndex = 1;
+        for (var i = 0; i < $scope.tests.length; i++) {
+          if ($scope.tests[i].semana == weekIndex) {
+            testNames.push($scope.tests[i].nombre);
+            id.push($scope.tests[i].id_evaluacion);
+            $scope.courseTests[i] = {
+              id: id,
+              week: weekIndex,
+              testNames: testNames
+            }
+          } else if ($scope.tests[i].semana == (weekIndex + 1)) {
+            weekIndex ++;
+            testNames = new Array();
+            id = new Array();
+            testNames.push($scope.tests[i].nombre);
+            id.push($scope.tests[i].id_evaluacion);
+            $scope.courseTests[i] = {
+              id: id,
+              week: weekIndex,
+              testNames: testNames
+            };
+          }
+          console.log($scope.courseTests[i].id);
+          $scope.courseTests[i].nombre;
+        }
+        console.log($scope.courseTests[1].id);
+        console.log($scope.courseTests[2].id);
+        //console.log($scope.courseClasses);
+      }).finally(function() {
+        // after request is done, spinner will disappear
+        $scope.loading = false;
+      });
+      return $scope.courseTests;
+    }
+    refreshTests();
+
+    console.log('course_id (backView): ' + $ionicHistory.backView().stateParams.courseId);
 
     $scope.toggleGroup = function(week) {
       if ($scope.isGroupShown(week)) {
@@ -291,6 +352,62 @@ angular.module('mooc.controllers', ['ngSanitize'])
     }
 
     refreshClass();
+  })
+
+  .controller('TestDetailCtrl', function($scope, $stateParams, TestsService) {
+
+    function refreshTest() {
+      TestsService.get($stateParams.testId).then(function(data) {
+        $scope.test = data;
+        console.log($scope.test);
+      }).finally(function() {
+        // after request is done, spinner will disappear
+        $scope.loading = false;
+      });
+    }
+    refreshTest();
+
+    function refrestQuestions() {
+      $scope.loading = true;
+      TestsService.listQuestions($stateParams.testId).then(function(data){
+        $scope.questions = data;
+        console.log('questions by testId ' + $stateParams.testId + ': ' + $scope.questions);
+
+        function isMultiple() {
+          $scope.multiple = false;
+          $scope.multiple_questions = [];
+          for (var i = 0;  i < $scope.questions.length; i++) {
+            if ($scope.questions[i].opcion_multiple == 'si') {
+              $scope.multiple = true;
+
+              $scope.multiple_questions[i] = {
+                question: $scope.questions[i].nombre,
+                a: $scope.questions[i].opcion_a,
+                b: $scope.questions[i].opcion_b,
+                c: $scope.questions[i].opcion_c,
+                d: $scope.questions[i].opcion_d
+              };
+              console.log('question: ' + $scope.multiple_questions[i].question);
+              console.log('a: ' + $scope.multiple_questions[i].a);
+
+            }
+            // if ($scope.multiple = true) {
+            //
+            // }
+          }
+
+        }
+
+        isMultiple();
+
+      }).finally(function() {
+        // after request is done, spinner will disappear
+        $scope.loading = false;
+      });
+    }
+
+    refrestQuestions();
+
   })
 
   .controller('LoginCtrl', function($scope, auth, $state, store) {

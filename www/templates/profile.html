@@ -1,23 +1,18 @@
 <ion-view view-title="Mi Perfil" >
-
   <ion-content>
     <ion-spinner ng-show="loading"></ion-spinner>
-    <div class="list card">
-      <div class="item item-avatar">
+    <section class="list card">
+      <article class="item item-avatar">
         <img src="{{user.foto}}">
         <h2>{{user.nombre}}</h2>
-        <p>{{user.tipo_usuario}}</p>
-        <p>{{user.universidad}}</p>
-        <p>{{user.ciudad}}</p>
-        <p>{{user.pais}}</p>
-      </div>
-
+        <p><span class="strong">ID - </span>{{user.id}}</p>
+        <p><span class="strong">Fecha de Inscripción: </span>{{user.fecha}}</p>
+        <p><span class="strong">Tipo de usuario: </span>{{user.tipo_usuario}}</p>
+        <p><span class="strong">Tipo de inteligencia: </span>{{user.tipo_inteligencia}}</p>
+      </article>
       <button class="button button-positive button-block" ng-click="logout()">
         Salir
       </button>
-
-    </div>
-
+    </section>
   </ion-content>
-
 </ion-view>
