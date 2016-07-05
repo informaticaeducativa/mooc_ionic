@@ -1,25 +1,40 @@
-Ionic App Base
-=====================
+# MOOC UCC Mobile app (iOS/Android)
 
-A starting project for Ionic that optionally supports using custom SCSS.
+## Instructions for running on dev environment
 
-## Using this project
+### Install NodeJS
 
-We recommend using the [Ionic CLI](https://github.com/driftyco/ionic-cli) to create new Ionic projects that are based on this project but use a ready-made starter template.
+#### Linux
 
-For example, to start a new Ionic project with the default tabs interface, make sure the `ionic` utility is installed:
+**Ubuntu/Debian**
 
-```bash
-$ npm install -g ionic
-```
+`sudo apt-get install nodejs`
 
-Then run: 
+**Archlinux**
 
-```bash
-$ ionic start myProject tabs
-```
+`sudo pacman -S nodejs`
 
-More info on this can be found on the Ionic [Getting Started](http://ionicframework.com/getting-started) page and the [Ionic CLI](https://github.com/driftyco/ionic-cli) repo.
+#### Windows
 
-## Issues
-Issues have been disabled on this repo, if you do find an issue or have a question consider posting it on the [Ionic Forum](http://forum.ionicframework.com/).  Or else if there is truly an error, follow our guidelines for [submitting an issue](http://ionicframework.com/submit-issue/) to the main Ionic repository.
+Download the "Current" release (option)
+
+[NodeJS](https://nodejs.org/en/download/)
+
+#### MacOSX
+
+Download from "Macintosh Installer"
+
+[NodeJS](https://nodejs.org/en/download/)
+
+### Installing Ionic and Apache Cordova
+
+Launch your Terminal and install cordova and ionic with npm:
+#### Linux and MacOSX
+`sudo npm install -g cordova`
+
+`sudo npm install -g ionic`
+
+#### Windows
+`npm install cordova`
+
+`npm install ionic`
