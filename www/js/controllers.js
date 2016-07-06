@@ -312,7 +312,7 @@ angular.module('mooc.controllers', ['ngSanitize'])
     }
     refreshTests();
 
-    console.log('course_id (backView): ' + $ionicHistory.backView().stateParams.courseId);
+    console.log('course_id (backView): ' + courseId);
 
     $scope.toggleGroup = function(week) {
       if ($scope.isGroupShown(week)) {
@@ -333,10 +333,6 @@ angular.module('mooc.controllers', ['ngSanitize'])
       ClassesService.get($stateParams.classId).then(function(data) {
         $scope.class = data;
         console.log($stateParams.classId);
-        //console.log($scope.class.id_leccion);
-        //console.log($scope.class.nombre);
-        //console.log($scope.class.contenido_grafico);
-        //console.log($scope.class.contenido_texto);
         $scope.class.contenido_grafico = $scope.class.contenido_grafico.replace("560", "330");
         $scope.class.contenido_grafico = $scope.class.contenido_grafico.replace("420", "330");
         $scope.class.contenido_grafico = $scope.class.contenido_grafico.replace("315", "280");
@@ -379,8 +375,8 @@ angular.module('mooc.controllers', ['ngSanitize'])
           for (var i = 0;  i < $scope.questions.length; i++) {
             if ($scope.questions[i].opcion_multiple == 'si') {
               $scope.multiple = true;
-
               $scope.multiple_questions[i] = {
+                id: $scope.questions[i].id_pregunta,
                 question: $scope.questions[i].nombre,
                 a: $scope.questions[i].opcion_a,
                 b: $scope.questions[i].opcion_b,
@@ -389,13 +385,8 @@ angular.module('mooc.controllers', ['ngSanitize'])
               };
               console.log('question: ' + $scope.multiple_questions[i].question);
               console.log('a: ' + $scope.multiple_questions[i].a);
-
             }
-            // if ($scope.multiple = true) {
-            //
-            // }
           }
-
         }
 
         isMultiple();
