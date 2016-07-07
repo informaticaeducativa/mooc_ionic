@@ -94,3 +94,11 @@ and select the file
 From there, you may run the app on the emulator (iPhone 4s-6s, iPad) or on your device using
 
 `Command + R`
+
+## Backend Routes (API REST)
+
+[MOOC UCC Backend repository](https://github.com/informaticaeducativa/moocucc)
+
+## Last pre-release (binaries included)
+
+[APK version 1.6.5](https://github.com/informaticaeducativa/mooc_ionic/releases/tag/v1.6.5)
