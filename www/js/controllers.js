@@ -3,26 +3,33 @@ angular.module('mooc.controllers', ['ngSanitize'])
 .controller('AppCtrl', function() {})
 
 .controller('MenuCtrl', function($scope, auth, $rootScope) {
+  // This scope is used for conditional menu items (relationed with authentication)
   $scope.auth = auth;
 })
 
+// User's profile controller.
 .controller('UserProfileCtrl', function($scope, auth, UsersService, $state, store) {
   $scope.auth = auth;
-
+  // Retrieves the logged user's identity
   function refreshUsers() {
+    // Loading spinner starts
     $scope.loading = true;
+    // getUser gets the user array of the authenticated user
     UsersService.getUser(auth.profile.identities[0].user_id)
     .then(function(data) {
+      // Current authenticated used data object
       $scope.user = data;
+      // Displaying in console the user's id
       console.log('user: ' + $scope.user.id);
     })
     .finally(function(){
+      // Stops the loading spinner
       $scope.loading = false;
     });
   }
-
+  // Execute the previous function
   refreshUsers();
-
+  // Logout function
   $scope.logout = function() {
     auth.signout();
     store.remove('token');
@@ -33,7 +40,6 @@ angular.module('mooc.controllers', ['ngSanitize'])
     $state.go('app.login');
     // refreshCourses();
   };
-
 })
 
 .controller('OwnCoursesCtrl', function($scope, auth, UserCoursesService, UsersService, CoursesService){
@@ -42,11 +48,11 @@ angular.module('mooc.controllers', ['ngSanitize'])
   function refreshUserCourses() {
     // For spinner's loading control
     $scope.loading = true;
+    // getUser gets the user array of the authenticated user
     UsersService.getUser(auth.profile.identities[0].user_id)
     .then(function(data) {
       $scope.user = data;
-      //console.log('user: ' + $scope.user.id);
-
+      // List the courses owned by the authenticated user
       UserCoursesService.listUserCourses($scope.user.id)
       .then(function(data) {
         userCoursesTable = data;
@@ -55,20 +61,23 @@ angular.module('mooc.controllers', ['ngSanitize'])
         for (var i = 0; i < userCoursesTable.length; i++) {
           userCourseIds[i] = userCoursesTable[i].id_curso;
         }
+        // Sorts the Course IDs array
         userCourseIds = userCourseIds.sort();
         CoursesService.list().then(function(data) {
           courses = data;
+          // Sorts the courses by course id
           courses = courses.sort(function (a,b) {
             return a.id_curso - b.id_curso;
           });
+          // Sorts the courses by course id
           userCoursesTable = userCoursesTable.sort(function (a,b) {
             return a.id_curso - b.id_curso;
           });
-
+          // Loop that adds the course to the user
           for (var i = 0; i < userCoursesTable.length; i++) {
-            //console.log('Courses ID: ' + courses[i].id_curso);
             if (courses[i].id_curso === userCourseIds[i]) {
               $scope.userCourses[i] = courses[i];
+              // This field is for tracking the type of user (teacher, student)
               $scope.userCourses[i]['tipo_relacion'] = userCoursesTable[i].tipo_relacion;
             }
           }
@@ -80,17 +89,20 @@ angular.module('mooc.controllers', ['ngSanitize'])
       $scope.loading = false;
     });
   }
+  // Retrieves the logged user's courses
   refreshUserCourses();
 })
-
+// Courses controller - General View
 .controller('CoursesCtrl', function($scope, CoursesService, auth, $state, UserCoursesService, $ionicHistory) {
-
+  // This scope is used for conditional items (relationed with authentication) in the view
   $scope.auth = auth;
 
   function refreshCourses() {
     // For spinner's loading control
     $scope.loading = true;
+    // CoursesService.list() lists all the courses from the backend
     CoursesService.list().then(function(data) {
+      // The courses are stored in $scope.courses
       $scope.courses = data;
       console.log($scope.courses);
     }).finally(function() {
@@ -102,19 +114,21 @@ angular.module('mooc.controllers', ['ngSanitize'])
   refreshCourses();
 
 })
-
+// Course Detail controller, for individual course view
 .controller('CourseDetailCtrl', function($scope, $stateParams, $state, auth,
   CoursesService, UsersService, UserCoursesService, $rootScope, $ionicHistory) {
 
     CoursesService.get($stateParams.courseId).then(function(data) {
       $scope.course = data;
-      //console.log(data.id_curso);
-
+      // getUser gets the user array of the authenticated user
       UsersService.getUser(auth.profile.identities[0].user_id)
       .then(function(data) {
+        // Loading spinner starts
         $scope.loading = true;
+        // user object is stored in $scope.user
         $scope.user = data;
-
+        // With this function, we verify if the authenticated user is registered in the
+        // selected course
         function verifyOwnCourse() {
           UserCoursesService.listUserCourses($scope.user.id)
           .then(function(data) {
@@ -124,13 +138,19 @@ angular.module('mooc.controllers', ['ngSanitize'])
             for (var i = 0; i < userCoursesTable.length; i++) {
               userCourseIds[i] = userCoursesTable[i].id_curso;
               if ($stateParams.courseId == userCourseIds[i]) {
+                // If the user is registered in the selected course, $scope.ownCourse
+                // is set to true. We use this in the view for validate if the button
+                // for registration to the course appers or the button for the view of
+                // course contents
                 $scope.ownCourse = true;
               }
             }
           })
         }
-        verifyOwnCourse();
 
+        verifyOwnCourse();
+        // This object stores the user_id and course_id for the registration of the user in
+        // the selected course.
         userCourseData = {
           user_id: $scope.user.id,
           course_id: $scope.course.id_curso
@@ -154,20 +174,20 @@ angular.module('mooc.controllers', ['ngSanitize'])
 
       // For spinner's loading control
       $scope.loading = true;
-      $scope.titles = [];
-      $scope.contents = [];
-      CoursesService.listCourseTemariosByInfoCourse($stateParams.courseId)
+      // listCourseTemarios retrieves the topics (title and content)
+      // information for the selected course
+      CoursesService.listCourseTemarios($stateParams.courseId)
       .then(function(data) {
+        // Array with temarios of the selected course
         $scope.temarios = data;
         $scope.courseTemarios = [];
-        //console.log($scope.temarios[0].titulo);
         for (var i = 0; i < $scope.temarios.length; i++) {
+          // Filling the courseTemarios array with the relevant data (title and content)
           $scope.courseTemarios[i] = {
             title: $scope.temarios[i].titulo,
             content: $scope.temarios[i].contenido
           };
         }
-        //console.log($scope.courseTemarios);
 
       }).finally(function() {
         // after request is done, spinner will disappear
@@ -190,10 +210,6 @@ angular.module('mooc.controllers', ['ngSanitize'])
     $scope.isGroupShown = function(title) {
       return $scope.shownGroup === title;
     };
-
-    // $ionicHistory.nextViewOptions({
-    //   disableBack: true
-    // });
 
   })
 
@@ -329,6 +345,7 @@ angular.module('mooc.controllers', ['ngSanitize'])
   .controller('ClassDetailCtrl', function($scope, $stateParams, ClassesService, $sce) {
 
     function refreshClass() {
+      // Loading spinner starts
       $scope.loading = true;
       ClassesService.get($stateParams.classId).then(function(data) {
         $scope.class = data;
@@ -364,6 +381,7 @@ angular.module('mooc.controllers', ['ngSanitize'])
     refreshTest();
 
     function refrestQuestions() {
+      // Loading spinner starts
       $scope.loading = true;
       TestsService.listQuestions($stateParams.testId).then(function(data){
         $scope.questions = data;

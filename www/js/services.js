@@ -52,7 +52,7 @@ app.factory('CoursesService', function($http) {
         return response.data[0];
       });
     },
-    listCourseTemariosByInfoCourse: function(courseId) {
+    listCourseTemarios: function(courseId) {
       return $http.get(apiUrl + '/temarios?id_curso=' + courseId + '&tipo_contenido=info_curso')
       .then(function(response) {
         return response.data;
