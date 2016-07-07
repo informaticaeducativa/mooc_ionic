@@ -1,6 +1,6 @@
 {
   "name": "mooc-ucc",
-  "version": "1.5.2",
+  "version": "1.6.5",
   "description": "An Ionic project",
   "dependencies": {
     "gulp": "^3.5.6",
