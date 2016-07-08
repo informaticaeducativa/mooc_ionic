@@ -3,9 +3,12 @@
   <ion-content>
     <ion-list ng-repeat="multiple_question in multiple_questions">
       <ion-item>
-        <h3 ng-bind-html="multiple_question.question">{{multiple_question.question}}</h3>
-          <ion-radio ng-repeat="option in multiple_question.options" ng-model="multiple_question.id"
-          ng-value="a">{{option}}</ion-radio>
+        <h3 ng-bind-html="multiple_question.question">
+          {{multiple_question.question}}
+        </h3>
+          <ion-radio ng-repeat="option in multiple_question.options"
+          ng-model="multiple_question.id"
+          ng-value="multiple_question.option_value[$index]">{{option}}</ion-radio>
       </ion-item>
     </ion-list>
   </ion-content>

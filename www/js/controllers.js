@@ -381,7 +381,8 @@ angular.module('mooc.controllers', ['ngSanitize'])
                 $scope.questions[i].opcion_b,
                 $scope.questions[i].opcion_c,
                 $scope.questions[i].opcion_d
-                ]
+              ],
+              option_value: ['a', 'b', 'c', 'd']
               };
               console.log('question: ' + $scope.multiple_questions[i].question);
               console.log('a: ' + $scope.multiple_questions[i].a);
