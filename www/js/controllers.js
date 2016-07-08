@@ -220,17 +220,20 @@ angular.module('mooc.controllers', ['ngSanitize'])
     function refreshClasses() {
       // For spinner's loading control
       $scope.loading = true;
+      // Lists the classes of the course selected
       ClassesService.list($stateParams.courseId).then(function(data) {
         $scope.classes = data;
+        // Saves the classes sorted by id in $scope.classes
         $scope.classes = $scope.classes.sort(function (a,b) {
           return a.semana - b.semana;
         });
-        //console.log($scope.classes);
         $scope.courseClasses = [];
         classNames = [];
         id = [];
         weekIndex = 1;
+        // Loop for filling the id, classNames and week in the courseClasses array
         for (var i = 0; i < $scope.classes.length; i++) {
+          // if week index (FK) at classes is equal to weekIndex, it executes the code below
           if ($scope.classes[i].semana == weekIndex) {
             classNames.push($scope.classes[i].nombre);
             id.push($scope.classes[i].id_leccion);
@@ -239,11 +242,18 @@ angular.module('mooc.controllers', ['ngSanitize'])
               week: weekIndex,
               classNames: classNames
             }
-          } else if ($scope.classes[i].semana == (weekIndex + 1)) {
+          }
+          // If week index (FK) changes to semana + 1, and it's equal to weekIndex + 1
+          // it executes the code below. This is important because every time that change the
+          // index for week (for example, we want to see the content/classes for the next week/module)
+          // it will create a new array for week and classNames.
+          else if ($scope.classes[i].semana == (weekIndex + 1)) {
             weekIndex ++;
             classNames = new Array();
             id = new Array();
+            // Pushes the className for classes[i]
             classNames.push($scope.classes[i].nombre);
+            // Pushes the id (week index) for classes[i]
             id.push($scope.classes[i].id_leccion);
             $scope.courseClasses[i] = {
               id: id,
@@ -251,12 +261,7 @@ angular.module('mooc.controllers', ['ngSanitize'])
               classNames: classNames
             };
           }
-          //console.log($scope.courseClasses[i].id);
-          //$scope.courseClasses[i].clasNames[i];
         }
-        console.log($scope.courseClasses[1].id);
-        console.log($scope.courseClasses[2].id);
-        //console.log($scope.courseClasses);
       }).finally(function() {
         // after request is done, spinner will disappear
         $scope.loading = false;
@@ -276,19 +281,20 @@ angular.module('mooc.controllers', ['ngSanitize'])
       return $scope.shownGroup === week;
     };
   })
-
+// Tests Controller
   .controller('TestsCtrl', function($scope, TestsService, auth, $stateParams, $ionicHistory) {
 
     function refreshTests() {
+      // courseID param, stored in the back view
       courseId = $ionicHistory.backView().stateParams.courseId;
       // For spinner's loading control
       $scope.loading = true;
+      // List the tests for the course and class selected
       TestsService.list(courseId).then(function(data) {
         $scope.tests = data;
         $scope.tests = $scope.tests.sort(function (a,b) {
           return a.semana - b.semana;
         });
-        //console.log($scope.tests);
         $scope.courseTests = [];
         testNames = [];
         id = [];
@@ -341,32 +347,7 @@ angular.module('mooc.controllers', ['ngSanitize'])
       return $scope.shownGroup === week;
     };
   })
-
-  .controller('ClassDetailCtrl', function($scope, $stateParams, ClassesService, $sce) {
-
-    function refreshClass() {
-      // Loading spinner starts
-      $scope.loading = true;
-      ClassesService.get($stateParams.classId).then(function(data) {
-        $scope.class = data;
-        console.log($stateParams.classId);
-        $scope.class.contenido_grafico = $scope.class.contenido_grafico.replace("560", "330");
-        $scope.class.contenido_grafico = $scope.class.contenido_grafico.replace("420", "330");
-        $scope.class.contenido_grafico = $scope.class.contenido_grafico.replace("315", "280");
-        //console.log($scope.class.contenido_grafico);
-      }).finally(function() {
-        // after request is done, spinner will disappear
-        $scope.loading = false;
-      });
-    }
-
-    $scope.getTrustedHTML = function(str){
-      return $sce.trustAsHtml(str);
-    }
-
-    refreshClass();
-  })
-
+//
   .controller('TestDetailCtrl', function($scope, $stateParams, TestsService) {
 
     function refreshTest() {
@@ -396,10 +377,11 @@ angular.module('mooc.controllers', ['ngSanitize'])
               $scope.multiple_questions[i] = {
                 id: $scope.questions[i].id_pregunta,
                 question: $scope.questions[i].nombre,
-                a: $scope.questions[i].opcion_a,
-                b: $scope.questions[i].opcion_b,
-                c: $scope.questions[i].opcion_c,
-                d: $scope.questions[i].opcion_d
+                options: [$scope.questions[i].opcion_a,
+                $scope.questions[i].opcion_b,
+                $scope.questions[i].opcion_c,
+                $scope.questions[i].opcion_d
+                ]
               };
               console.log('question: ' + $scope.multiple_questions[i].question);
               console.log('a: ' + $scope.multiple_questions[i].a);
@@ -419,8 +401,32 @@ angular.module('mooc.controllers', ['ngSanitize'])
 
   })
 
-  .controller('LoginCtrl', function($scope, auth, $state, store) {
+  .controller('ClassDetailCtrl', function($scope, $stateParams, ClassesService, $sce) {
 
+    function refreshClass() {
+      // Loading spinner starts
+      $scope.loading = true;
+      ClassesService.get($stateParams.classId).then(function(data) {
+        $scope.class = data;
+        console.log($stateParams.classId);
+        $scope.class.contenido_grafico = $scope.class.contenido_grafico.replace("560", "330");
+        $scope.class.contenido_grafico = $scope.class.contenido_grafico.replace("420", "330");
+        $scope.class.contenido_grafico = $scope.class.contenido_grafico.replace("315", "280");
+      }).finally(function() {
+        // after request is done, spinner will disappear
+        $scope.loading = false;
+      });
+    }
+
+    $scope.getTrustedHTML = function(str){
+      return $sce.trustAsHtml(str);
+    }
+
+    refreshClass();
+  })
+// Login controller - it uses auth and store from auth0 library
+  .controller('LoginCtrl', function($scope, auth, $state, store) {
+    // Authentication function.
     function doAuth() {
       auth.signin({
         closable: false,
@@ -430,7 +436,6 @@ angular.module('mooc.controllers', ['ngSanitize'])
           scope: 'openid offline_access'
         }
       }, function(profile, idToken, accessToken, state, refreshToken) {
-        //$scope.isAuthenticated = auth.isAuthenticated;
         store.set('profile', profile);
         store.set('token', idToken);
         store.set('refreshToken', refreshToken);

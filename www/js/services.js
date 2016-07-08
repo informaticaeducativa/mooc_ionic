@@ -1,4 +1,4 @@
-var app = angular.module('mooc.services', [])
+var app = angular.module('mooc.services', []);
 
 app.factory('UsersService', function($http) {
   var apiUrl = 'http://informaticaeducativaucc.com/api';
