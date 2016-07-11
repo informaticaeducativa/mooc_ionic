@@ -1,15 +1,18 @@
 <ion-view view-title="Evaluación">
-  <br/>
   <ion-content>
-    <ion-list ng-repeat="multiple_question in multiple_questions">
-      <ion-item>
-        <h3 ng-bind-html="multiple_question.question">
-          {{multiple_question.question}}
-        </h3>
-          <ion-radio ng-repeat="option in multiple_question.options"
-          ng-model="multiple_question.id"
-          ng-value="multiple_question.option_value[$index]">{{option}}</ion-radio>
-      </ion-item>
-    </ion-list>
+    <ul>
+      <li ng-repeat="question in lol">
+        <h4 class="strong" ng-bind-html="question.questionText " >{{ question.questionText }}</h4>
+        <h5>Selección: {{data[$index]}}</h5>
+        <ul>
+          <li ng-repeat="answer in question.answers">
+            <ion-radio ng-model="data[$parent.$index]" ng-value="answer"
+              name="quest_{{$parent.$index}}_answers" >
+              {{ answer }}
+            </ion-radio>
+          </li>
+        </ul>
+      </li>
+    </ul>
   </ion-content>
 </ion-view>

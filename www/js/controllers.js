@@ -281,7 +281,7 @@ angular.module('mooc.controllers', ['ngSanitize'])
       return $scope.shownGroup === week;
     };
   })
-// Tests Controller
+  // Tests Controller
   .controller('TestsCtrl', function($scope, TestsService, auth, $stateParams, $ionicHistory) {
 
     function refreshTests() {
@@ -347,7 +347,7 @@ angular.module('mooc.controllers', ['ngSanitize'])
       return $scope.shownGroup === week;
     };
   })
-//
+  //
   .controller('TestDetailCtrl', function($scope, $stateParams, TestsService) {
 
     function refreshTest() {
@@ -369,6 +369,57 @@ angular.module('mooc.controllers', ['ngSanitize'])
         console.log('questions by testId ' + $stateParams.testId + ': ' + $scope.questions);
 
         function isMultiple() {
+          $scope.lol = [
+            {
+              questionText: $scope.questions[1].nombre,
+              correct: $scope.questions[1].respuesta,
+              answers: [
+                $scope.questions[1].opcion_a,
+                $scope.questions[1].opcion_b,
+                $scope.questions[1].opcion_c,
+                $scope.questions[1].opcion_d
+              ],
+              option_value: ['a', 'b', 'c', 'd']
+            },
+            {
+              questionText: $scope.questions[2].nombre,
+              correct: $scope.questions[2].respuesta,
+              answers: [
+                $scope.questions[2].opcion_a,
+                $scope.questions[2].opcion_b,
+                $scope.questions[2].opcion_c,
+                $scope.questions[2].opcion_d
+              ],
+              option_value: ['a', 'b', 'c', 'd']
+            }
+
+          ];
+          $scope.test1 = [
+            {
+              questionText: $scope.questions[1].nombre,
+              correct: $scope.questions[1].respuesta,
+              answers: [
+                $scope.questions[1].opcion_a,
+                $scope.questions[1].opcion_b,
+                $scope.questions[1].opcion_c,
+                $scope.questions[1].opcion_d
+              ],
+              option_value: ['a', 'b', 'c', 'd']
+            }];
+            $scope.test2 = [{
+              questionText: $scope.questions[2].nombre,
+              correct: $scope.questions[2].respuesta,
+              answers: [
+                $scope.questions[2].opcion_a,
+                $scope.questions[2].opcion_b,
+                $scope.questions[2].opcion_c,
+                $scope.questions[2].opcion_d
+              ],
+              option_value: ['a', 'b', 'c', 'd']
+            }
+          ];
+          $scope.data = {};
+
           $scope.multiple = false;
           $scope.multiple_questions = [];
           for (var i = 0;  i < $scope.questions.length; i++) {
@@ -377,15 +428,16 @@ angular.module('mooc.controllers', ['ngSanitize'])
               $scope.multiple_questions[i] = {
                 id: $scope.questions[i].id_pregunta,
                 question: $scope.questions[i].nombre,
-                options: [$scope.questions[i].opcion_a,
-                $scope.questions[i].opcion_b,
-                $scope.questions[i].opcion_c,
-                $scope.questions[i].opcion_d
-              ],
-              option_value: ['a', 'b', 'c', 'd']
+                options: [
+                  $scope.questions[i].opcion_a,
+                  $scope.questions[i].opcion_b,
+                  $scope.questions[i].opcion_c,
+                  $scope.questions[i].opcion_d
+                ],
+                option_value: ['a', 'b', 'c', 'd'],
+                answer: $scope.questions[i].respuesta
               };
               console.log('question: ' + $scope.multiple_questions[i].question);
-              console.log('a: ' + $scope.multiple_questions[i].a);
             }
           }
         }
@@ -425,7 +477,7 @@ angular.module('mooc.controllers', ['ngSanitize'])
 
     refreshClass();
   })
-// Login controller - it uses auth and store from auth0 library
+  // Login controller - it uses auth and store from auth0 library
   .controller('LoginCtrl', function($scope, auth, $state, store) {
     // Authentication function.
     function doAuth() {
