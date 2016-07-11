@@ -401,6 +401,8 @@ angular.module('mooc.controllers', ['ngSanitize'])
             }
           }
 
+          var multiple_questions = $scope.multiple_questions.length;
+
           $scope.submit = function() {
             var hits = 0;
             console.log($scope.data);
@@ -416,10 +418,12 @@ angular.module('mooc.controllers', ['ngSanitize'])
             }
             console.log('asiertos: ' + hits);
             $scope.answered = true;
+            var fuck = (hits/multiple_questions) * 100;
+            var grade = Math.round10(fuck, -1);
 
             var alertPopup = $ionicPopup.alert({
               title: 'Resultado del Quiz',
-              template: 'Asiertos: ' + hits
+              template: 'Asiertos: ' + hits + 'Nota: ' + fuck + ' %'
             });
 
             alertPopup.then(function(res) {
@@ -427,9 +431,6 @@ angular.module('mooc.controllers', ['ngSanitize'])
             });
 
           };
-          // $scope.showAlert = function() {
-          //
-          // };
 
         }
 
