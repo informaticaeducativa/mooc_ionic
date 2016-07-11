@@ -1,18 +1,22 @@
 <ion-view view-title="Evaluación">
   <ion-content>
-    <ul>
-      <li ng-repeat="question in lol">
+    <ion-spinner ng-show="loading"></ion-spinner>
+    <ul ng-if="multiple">
+      <li ng-repeat="question in multiple_questions">
         <h4 class="strong" ng-bind-html="question.questionText " >{{ question.questionText }}</h4>
         <h5>Selección: {{data[$index]}}</h5>
         <ul>
-          <li ng-repeat="answer in question.answers">
-            <ion-radio ng-model="data[$parent.$index]" ng-value="answer"
-              name="quest_{{$parent.$index}}_answers" >
+          <li ng-repeat="answer in question.options">
+            <ion-radio ng-model="data[$parent.$index]" ng-value="question.option_value[$index]"
+              name="quest_{{$parent.$index}}_options" >
               {{ answer }}
             </ion-radio>
           </li>
         </ul>
+
       </li>
+      <button class="button" type="submit" ng-click="submit()">Enviar</button>
+      <!-- <button ng-if="answered" class="button" type="submit" ng-click="submit()">Volver</button> -->
     </ul>
   </ion-content>
 </ion-view>

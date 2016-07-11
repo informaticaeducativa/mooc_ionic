@@ -348,7 +348,9 @@ angular.module('mooc.controllers', ['ngSanitize'])
     };
   })
   //
-  .controller('TestDetailCtrl', function($scope, $stateParams, TestsService) {
+  .controller('TestDetailCtrl', function($scope, $stateParams, TestsService, $ionicPopup) {
+
+    $scope.data = {};
 
     function refreshTest() {
       TestsService.get($stateParams.testId).then(function(data) {
@@ -368,66 +370,22 @@ angular.module('mooc.controllers', ['ngSanitize'])
         $scope.questions = data;
         console.log('questions by testId ' + $stateParams.testId + ': ' + $scope.questions);
 
-        function isMultiple() {
-          $scope.lol = [
-            {
-              questionText: $scope.questions[1].nombre,
-              correct: $scope.questions[1].respuesta,
-              answers: [
-                $scope.questions[1].opcion_a,
-                $scope.questions[1].opcion_b,
-                $scope.questions[1].opcion_c,
-                $scope.questions[1].opcion_d
-              ],
-              option_value: ['a', 'b', 'c', 'd']
-            },
-            {
-              questionText: $scope.questions[2].nombre,
-              correct: $scope.questions[2].respuesta,
-              answers: [
-                $scope.questions[2].opcion_a,
-                $scope.questions[2].opcion_b,
-                $scope.questions[2].opcion_c,
-                $scope.questions[2].opcion_d
-              ],
-              option_value: ['a', 'b', 'c', 'd']
-            }
+        $scope.questions = $scope.questions.sort(function (a,b) {
+          return a.id_pregunta - b.id_pregunta;
+        });
 
-          ];
-          $scope.test1 = [
-            {
-              questionText: $scope.questions[1].nombre,
-              correct: $scope.questions[1].respuesta,
-              answers: [
-                $scope.questions[1].opcion_a,
-                $scope.questions[1].opcion_b,
-                $scope.questions[1].opcion_c,
-                $scope.questions[1].opcion_d
-              ],
-              option_value: ['a', 'b', 'c', 'd']
-            }];
-            $scope.test2 = [{
-              questionText: $scope.questions[2].nombre,
-              correct: $scope.questions[2].respuesta,
-              answers: [
-                $scope.questions[2].opcion_a,
-                $scope.questions[2].opcion_b,
-                $scope.questions[2].opcion_c,
-                $scope.questions[2].opcion_d
-              ],
-              option_value: ['a', 'b', 'c', 'd']
-            }
-          ];
-          $scope.data = {};
+        function isMultiple() {
 
           $scope.multiple = false;
+          $scope.answered = false;
           $scope.multiple_questions = [];
+          var j = 0;
           for (var i = 0;  i < $scope.questions.length; i++) {
             if ($scope.questions[i].opcion_multiple == 'si') {
               $scope.multiple = true;
-              $scope.multiple_questions[i] = {
+              $scope.multiple_questions[j] = {
                 id: $scope.questions[i].id_pregunta,
-                question: $scope.questions[i].nombre,
+                questionText: $scope.questions[i].nombre,
                 options: [
                   $scope.questions[i].opcion_a,
                   $scope.questions[i].opcion_b,
@@ -437,12 +395,47 @@ angular.module('mooc.controllers', ['ngSanitize'])
                 option_value: ['a', 'b', 'c', 'd'],
                 answer: $scope.questions[i].respuesta
               };
-              console.log('question: ' + $scope.multiple_questions[i].question);
+              console.log('answer: ' + $scope.multiple_questions[j].answer);
+              console.log('picked:' + $scope.data);
+              j ++;
             }
           }
+
+          $scope.submit = function() {
+            var hits = 0;
+            console.log($scope.data);
+            for (var i = 0; i < $scope.multiple_questions.length; i++) {
+              console.log('hi');
+              console.log($scope.multiple_questions);
+              console.log($scope.multiple_questions[i]);
+              console.log($scope.multiple_questions[i].answer);
+              console.log('length: ' + $scope.multiple_questions.length);
+              if ($scope.multiple_questions[i].answer == $scope.data[i]) {
+                hits ++;
+              }
+            }
+            console.log('asiertos: ' + hits);
+            $scope.answered = true;
+
+            var alertPopup = $ionicPopup.alert({
+              title: 'Resultado del Quiz',
+              template: 'Asiertos: ' + hits
+            });
+
+            alertPopup.then(function(res) {
+              console.log('Thank you for not eating my delicious ice cream cone');
+            });
+
+          };
+          // $scope.showAlert = function() {
+          //
+          // };
+
         }
 
         isMultiple();
+
+
 
       }).finally(function() {
         // after request is done, spinner will disappear
