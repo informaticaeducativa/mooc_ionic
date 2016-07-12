@@ -12,7 +12,9 @@ app.factory('UsersService', function($http) {
     getUserId: function(socialId) {
       return $http.get(apiUrl + '/usuario/social/' + socialId)
       .then(function(response) {
-        return response.data[0].id;
+        var userId = response.data[0].id;
+        console.log(userId);
+        return userId;
       });
     }
   };
@@ -114,12 +116,9 @@ app.factory('TestsService', function($http) {
         return response.data;
       });
     },
-    getAttempts: function(userId, testId) {
-      var data = {
-        userId: userId,
-        testId: testId
-      }
-      return $http.get(apiUrl + '/grade/', data).then(function(response) {
+    getAttempts: function(data) {
+      return $http.get(apiUrl + '/grade?user_id=' + data.user_id + '&test_id=' + data.test_id)
+      .then(function(response) {
         var attempts = 0;
         if (response.data.length > 0) {
           attempts = response.data[0].intentos;

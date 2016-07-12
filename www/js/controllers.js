@@ -320,12 +320,8 @@ angular.module('mooc.controllers', ['ngSanitize'])
               testNames: testNames
             };
           }
-          console.log($scope.courseTests[i].id);
           $scope.courseTests[i].nombre;
         }
-        console.log($scope.courseTests[1].id);
-        console.log($scope.courseTests[2].id);
-        //console.log($scope.courseClasses);
       }).finally(function() {
         // after request is done, spinner will disappear
         $scope.loading = false;
@@ -354,6 +350,7 @@ angular.module('mooc.controllers', ['ngSanitize'])
     $scope.data = {};
     $scope.data2 = {};
     var testId = $stateParams.testId;
+    var userId = 0;
 
     function refreshTest() {
       TestsService.get(testId).then(function(data) {
@@ -450,31 +447,41 @@ angular.module('mooc.controllers', ['ngSanitize'])
                 template: 'Aciertos: ' + hits + '<br/>Nota: ' + grade + ' %'
               });
 
-              var userId = UsersService.getUserId(auth.profile.identities[0].user_id);
-              var date = DateService.getDate();
-              console.log('date: ' + date);
-              var attempts = TestsService.getAttempts(userId, testId);
-              console.log('attempts: ' + attempts);
+              UsersService.getUserId(auth.profile.identities[0].user_id)
+              .then(function(userData) {
+                userId = userData;
 
-              var testData = {
-                testId: testId,
-                userId: userId,
-                grade: grade,
-                attempts: attempts,
-                courseId: courseId,
-                date: date
-              };
+                userCourseData = {
+                  user_id: userId,
+                  test_id: testId
+                };
+                
+                var date = DateService.getDate();
+                TestsService.getAttempts(testDataGet).then(function(attemptData) {
+                  var attempts = attemptData;
 
-              console.log(testData);
-              if (attempts === 0) {
-                TestsService.createAttempt(testData);
-              } else {
-                attempts ++;
-                TestsService.updateAttempt(testData);
-              }
+                  var testData = {
+                    test_id: testId,
+                    user_id: userId,
+                    grade: grade,
+                    attempts: attempts,
+                    course_id: courseId,
+                    date: date
+                  };
 
+                  console.log(testData);
+                  if (attempts === 0) {
+                    TestsService.createAttempt(testData);
+                  } else {
+                    attempts ++;
+                    TestsService.updateAttempt(testData);
+                  }
 
-              $ionicHistory.goBack();
+                  $ionicHistory.goBack();
+
+                })
+
+              });
 
             } else {
               $ionicPopup.alert({
