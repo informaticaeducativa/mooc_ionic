@@ -351,6 +351,7 @@ angular.module('mooc.controllers', ['ngSanitize'])
   .controller('TestDetailCtrl', function($scope, $stateParams, TestsService, $ionicPopup, $ionicHistory) {
 
     $scope.data = {};
+    $scope.data2 = {};
 
     function refreshTest() {
       TestsService.get($stateParams.testId).then(function(data) {
@@ -367,39 +368,53 @@ angular.module('mooc.controllers', ['ngSanitize'])
       // Loading spinner starts
       $scope.loading = true;
       TestsService.listQuestions($stateParams.testId).then(function(data){
-        $scope.questions = data;
-        console.log('questions by testId ' + $stateParams.testId + ': ' + $scope.questions);
+        questions = data;
+        console.log('questions by testId ' + $stateParams.testId + ': ' + questions);
 
-        $scope.questions = $scope.questions.sort(function (a,b) {
+        questions = questions.sort(function (a,b) {
           return a.id_pregunta - b.id_pregunta;
         });
 
         function isMultiple() {
 
           $scope.multiple = false;
-          $scope.answered = false;
+          $scope.single = false;
+          $scope.single_questions = [];
           $scope.multiple_questions = [];
           var j = 0;
-          for (var i = 0;  i < $scope.questions.length; i++) {
-            if ($scope.questions[i].opcion_multiple == 'si') {
+          var k = 0;
+          for (var i = 0;  i < questions.length; i++) {
+            if (questions[i].opcion_multiple == 'si') {
               $scope.multiple = true;
               $scope.multiple_questions[j] = {
-                id: $scope.questions[i].id_pregunta,
-                questionText: $scope.questions[i].nombre,
+                id: questions[i].id_pregunta,
+                questionText: questions[i].nombre,
                 options: [
-                  $scope.questions[i].opcion_a,
-                  $scope.questions[i].opcion_b,
-                  $scope.questions[i].opcion_c,
-                  $scope.questions[i].opcion_d
+                  questions[i].opcion_a,
+                  questions[i].opcion_b,
+                  questions[i].opcion_c,
+                  questions[i].opcion_d
                 ],
                 option_value: ['a', 'b', 'c', 'd'],
-                answer: $scope.questions[i].respuesta
+                answer: questions[i].respuesta
               };
               console.log('answer: ' + $scope.multiple_questions[j].answer);
               console.log('picked:' + $scope.data);
               j ++;
+            } else {
+              $scope.single = true;
+              $scope.single_questions[k] = {
+                id: questions[i].id_pregunta,
+                questionText: questions[i].nombre,
+                answer: questions[i].respuesta
+              };
+              console.log('single question: ' + $scope.single_questions[k].questionText);
+              console.log('single q answer: ' + $scope.single_questions[k].answer);
+              k ++;
             }
           }
+
+          // if (single_questions.length > 0) { $scope.single = true }
 
           var multiple_questions = $scope.multiple_questions.length;
 
@@ -407,17 +422,12 @@ angular.module('mooc.controllers', ['ngSanitize'])
             var hits = 0;
             console.log($scope.data);
             for (var i = 0; i < $scope.multiple_questions.length; i++) {
-              console.log('hi');
-              console.log($scope.multiple_questions);
-              console.log($scope.multiple_questions[i]);
-              console.log($scope.multiple_questions[i].answer);
               console.log('length: ' + $scope.multiple_questions.length);
               if ($scope.multiple_questions[i].answer == $scope.data[i]) {
                 hits ++;
               }
             }
             console.log('asiertos: ' + hits);
-            $scope.answered = true;
             var grade = ((hits/multiple_questions)*100).toFixed(2);
 
             var alertPopup = $ionicPopup.alert({
@@ -435,8 +445,6 @@ angular.module('mooc.controllers', ['ngSanitize'])
         }
 
         isMultiple();
-
-
 
       }).finally(function() {
         // after request is done, spinner will disappear

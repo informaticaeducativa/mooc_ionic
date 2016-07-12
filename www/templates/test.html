@@ -1,22 +1,32 @@
 <ion-view view-title="Evaluación">
   <ion-content>
     <ion-spinner ng-show="loading"></ion-spinner>
-    <ul ng-if="multiple">
-      <li ng-repeat="question in multiple_questions">
-        <h4 class="strong" ng-bind-html="question.questionText " >{{ question.questionText }}</h4>
+
+    <ul>
+      <li ng-if="single" ng-repeat="single_question in single_questions">
+        <h4 class="strong" ng-bind-html="single_question.questionText " >
+          {{ single_question.questionText }}
+        </h4>
+        <h5>Selección: {{data2[$index]}}</h5>
+        <input type="text" ng-model="data2[$index]" name="quest_{{$parent.$index}}_single" />
+      </li>
+
+      <li ng-if="multiple" ng-repeat="question in multiple_questions">
+        <h4 class="strong" ng-bind-html="question.questionText " >
+          {{ question.questionText }}
+        </h4>
         <h5>Selección: {{data[$index]}}</h5>
         <ul>
           <li ng-repeat="answer in question.options">
-            <ion-radio ng-model="data[$parent.$index]" ng-value="question.option_value[$index]"
+            <ion-radio  ng-model="data[$parent.$index]" 
+              ng-value="question.option_value[$index]"
               name="quest_{{$parent.$index}}_options" >
               {{ answer }}
             </ion-radio>
           </li>
         </ul>
-
       </li>
       <button class="button" type="submit" ng-click="submit()">Enviar</button>
-      <!-- <button ng-if="answered" class="button" type="submit" ng-click="submit()">Volver</button> -->
     </ul>
   </ion-content>
 </ion-view>
