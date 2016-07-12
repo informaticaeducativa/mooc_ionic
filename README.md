@@ -99,6 +99,6 @@ From there, you may run the app on the emulator (iPhone 4s-6s, iPad) or on your 
 
 [MOOC UCC Backend repository](https://github.com/informaticaeducativa/moocucc)
 
-## Last pre-release (binaries included)
+## Last release (binaries included)
 
-[APK version 1.6.5](https://github.com/informaticaeducativa/mooc_ionic/releases/tag/v1.6.5)
+[APK version 1.9.0](https://github.com/informaticaeducativa/mooc_ionic/releases/tag/v1.9.0)
