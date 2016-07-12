@@ -416,23 +416,34 @@ angular.module('mooc.controllers', ['ngSanitize'])
 
           // if (single_questions.length > 0) { $scope.single = true }
 
-          var multiple_questions = $scope.multiple_questions.length;
+          var multipleQuestionsLength = $scope.multiple_questions.length;
+          var singleQuestionsLength = $scope.single_questions.length;
+          var questionsLength = questions.length;
 
           $scope.submit = function() {
             var hits = 0;
             console.log($scope.data);
-            for (var i = 0; i < $scope.multiple_questions.length; i++) {
-              console.log('length: ' + $scope.multiple_questions.length);
-              if ($scope.multiple_questions[i].answer == $scope.data[i]) {
+            for (var i = 0; i < multipleQuestionsLength; i++) {
+              console.log('multiple q length: ' + multipleQuestionsLength);
+              if ($scope.multiple_questions[i].answer === $scope.data[i]) {
+                hits ++;
+              }
+            }
+            console.log($scope.data2);
+            for (var i = 0; i < singleQuestionsLength; i++) {
+              console.log('single q length: ' + singleQuestionsLength);
+              console.log('data2[i]: ' + $scope.data2[i]);
+              if ($scope.single_questions[i].answer === $scope.data2[i]) {
                 hits ++;
               }
             }
             console.log('asiertos: ' + hits);
-            var grade = ((hits/multiple_questions)*100).toFixed(2);
+            var gradeFloat = ((hits/questionsLength)*100).toFixed(2);
+            var grade = Math.floor(gradeFloat);
 
             var alertPopup = $ionicPopup.alert({
               title: 'Resultado del Quiz',
-              template: 'Asiertos: ' + hits + '<br/>Nota: ' + grade + ' %'
+              template: 'Aciertos: ' + hits + '<br/>Nota: ' + grade + ' %'
             });
 
             alertPopup.then(function(res) {
