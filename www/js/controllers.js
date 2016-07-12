@@ -453,16 +453,26 @@ angular.module('mooc.controllers', ['ngSanitize'])
               var userId = UsersService.getUserId(auth.profile.identities[0].user_id);
               var date = DateService.getDate();
               console.log('date: ' + date);
+              var attempts = TestsService.getAttempts(userId, testId);
+              console.log('attempts: ' + attempts);
 
               var testData = {
                 testId: testId,
                 userId: userId,
                 grade: grade,
                 attempts: attempts,
-                courseId: courseId
+                courseId: courseId,
+                date: date
               };
 
-              TestsService.createAttempt(testData)
+              console.log(testData);
+              if (attempts === 0) {
+                TestsService.createAttempt(testData);
+              } else {
+                attempts ++;
+                TestsService.updateAttempt(testData);
+              }
+
 
               $ionicHistory.goBack();
 

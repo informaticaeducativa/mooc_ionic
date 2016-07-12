@@ -110,8 +110,25 @@ app.factory('TestsService', function($http) {
       });
     },
     updateAttempt: function(data) {
-      return $http.put(apiUrl + '/grade/'+ data).then(function(response) {
+      return $http.put(apiUrl + '/grade/', data).then(function(response) {
         return response.data;
+      });
+    },
+    getAttempts: function(userId, testId) {
+      var data = {
+        userId: userId,
+        testId: testId
+      }
+      return $http.get(apiUrl + '/grade/', data).then(function(response) {
+        var attempts = 0;
+        if (response.data.length > 0) {
+          attempts = response.data[0].intentos;
+          return attempts;
+        } else {
+          attempts = 0;
+          return attempts;
+        }
+        console.log('intentos: ' + attempts);
       });
     }
   }
@@ -123,17 +140,17 @@ app.factory('DateService', function() {
       var dateObject = new Date();
       var dateArray = [
         dateObject.getFullYear().toString(),
-        ("0" + (dateObject.getMonth() + 1)).slice(-2),
+        ('0' + (dateObject.getMonth() + 1)).slice(-2),
         dateObject.getDate().toString()
       ];
-      dateArray = dateArray.join("-");
+      dateArray = dateArray.join('-');
       console.log('date: ' + dateArray);
       var timeArray = [
-        ("0" + (dateObject.getHours())).slice(-2),
-        ("0" + (dateObject.getMinutes())).slice(-2),
-        ("0" + (dateObject.getSeconds())).slice(-2)
+        ('0' + (dateObject.getHours())).slice(-2),
+        ('0' + (dateObject.getMinutes())).slice(-2),
+        ('0' + (dateObject.getSeconds())).slice(-2)
       ];
-      timeArray = timeArray.join(":");
+      timeArray = timeArray.join(':');
       console.log('time: ' + timeArray);
       date = dateArray + ' ' + timeArray;
 
