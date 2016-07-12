@@ -21,3 +21,25 @@ $ionicons-font-path: "../lib/ionic/fonts" !default;
 // Include all of Ionic
 @import "www/lib/ionic/scss/ionic";
 
+.strong {
+	font-weight: bold;
+}
+
+.list {
+  .item.item-accordion {
+    line-height: 38px;
+    padding-top: 0;
+    padding-bottom: 0;
+    transition: 0.09s all linear;
+  }
+  .item.item-accordion.ng-hide {
+    line-height: 0px;
+  }
+  .item.item-accordion.ng-hide-add,
+  .item.item-accordion.ng-hide-remove {
+    display: block !important;
+  }
+  a {
+	  text-decoration: none;
+  }
+}
