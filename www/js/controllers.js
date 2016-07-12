@@ -422,37 +422,42 @@ angular.module('mooc.controllers', ['ngSanitize'])
 
           $scope.submit = function() {
             var hits = 0;
-            console.log($scope.data);
-            for (var i = 0; i < multipleQuestionsLength; i++) {
-              console.log('multiple q length: ' + multipleQuestionsLength);
-              if ($scope.multiple_questions[i].answer === $scope.data[i]) {
-                hits ++;
+            if (Object.keys($scope.data).length == multipleQuestionsLength
+                && Object.keys($scope.data2).length == singleQuestionsLength) {
+              console.log($scope.data);
+              for (var i = 0; i < multipleQuestionsLength; i++) {
+                console.log('multiple q length: ' + multipleQuestionsLength);
+                if ($scope.multiple_questions[i].answer === $scope.data[i]) {
+                  hits ++;
+                }
               }
-            }
-            console.log($scope.data2);
-            for (var i = 0; i < singleQuestionsLength; i++) {
-              console.log('single q length: ' + singleQuestionsLength);
-              console.log('data2[i]: ' + $scope.data2[i]);
-              if ($scope.single_questions[i].answer === $scope.data2[i]) {
-                hits ++;
+              console.log($scope.data2);
+              for (var i = 0; i < singleQuestionsLength; i++) {
+                console.log('single q length: ' + singleQuestionsLength);
+                console.log('data2[i]: ' + $scope.data2[i]);
+                if ($scope.single_questions[i].answer === $scope.data2[i]) {
+                  hits ++;
+                }
               }
+              console.log('asiertos: ' + hits);
+              var gradeFloat = ((hits/questionsLength)*100).toFixed(2);
+              var grade = Math.floor(gradeFloat);
+
+              var alertPopup = $ionicPopup.alert({
+                title: 'Resultado del Quiz',
+                template: 'Aciertos: ' + hits + '<br/>Nota: ' + grade + ' %'
+              });
+
+              $ionicHistory.goBack();
+
+            } else {
+              $ionicPopup.alert({
+                title: '¡ Error !',
+                template: 'Debes contestar todas las preguntas'
+              });
             }
-            console.log('asiertos: ' + hits);
-            var gradeFloat = ((hits/questionsLength)*100).toFixed(2);
-            var grade = Math.floor(gradeFloat);
-
-            var alertPopup = $ionicPopup.alert({
-              title: 'Resultado del Quiz',
-              template: 'Aciertos: ' + hits + '<br/>Nota: ' + grade + ' %'
-            });
-
-            alertPopup.then(function(res) {
-              console.log('Thank you for not eating my delicious ice cream cone');
-            });
-
-            $ionicHistory.goBack();
-
           };
+
         }
 
         isMultiple();
