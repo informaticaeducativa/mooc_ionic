@@ -348,7 +348,7 @@ angular.module('mooc.controllers', ['ngSanitize'])
     };
   })
   //
-  .controller('TestDetailCtrl', function($scope, $stateParams, TestsService, $ionicPopup) {
+  .controller('TestDetailCtrl', function($scope, $stateParams, TestsService, $ionicPopup, $ionicHistory) {
 
     $scope.data = {};
 
@@ -418,20 +418,20 @@ angular.module('mooc.controllers', ['ngSanitize'])
             }
             console.log('asiertos: ' + hits);
             $scope.answered = true;
-            var fuck = (hits/multiple_questions) * 100;
-            var grade = Math.round10(fuck, -1);
+            var grade = ((hits/multiple_questions)*100).toFixed(2);
 
             var alertPopup = $ionicPopup.alert({
               title: 'Resultado del Quiz',
-              template: 'Asiertos: ' + hits + 'Nota: ' + fuck + ' %'
+              template: 'Asiertos: ' + hits + '<br/>Nota: ' + grade + ' %'
             });
 
             alertPopup.then(function(res) {
               console.log('Thank you for not eating my delicious ice cream cone');
             });
 
-          };
+            $ionicHistory.goBack();
 
+          };
         }
 
         isMultiple();
