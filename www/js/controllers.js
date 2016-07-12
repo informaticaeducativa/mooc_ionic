@@ -51,9 +51,9 @@ angular.module('mooc.controllers', ['ngSanitize'])
     // getUser gets the user array of the authenticated user
     UsersService.getUser(auth.profile.identities[0].user_id)
     .then(function(data) {
-      $scope.user = data;
+      var userId = data.id;
       // List the courses owned by the authenticated user
-      UserCoursesService.listUserCourses($scope.user.id)
+      UserCoursesService.listUserCourses(userId)
       .then(function(data) {
         userCoursesTable = data;
         userCourseIds = [];
@@ -104,7 +104,6 @@ angular.module('mooc.controllers', ['ngSanitize'])
     CoursesService.list().then(function(data) {
       // The courses are stored in $scope.courses
       $scope.courses = data;
-      console.log($scope.courses);
     }).finally(function() {
       // after request is done, spinner will disappear
       $scope.loading = false;
@@ -451,11 +450,13 @@ angular.module('mooc.controllers', ['ngSanitize'])
               .then(function(userData) {
                 userId = userData;
 
-                userCourseData = {
+                var testDataGet = {
                   user_id: userId,
                   test_id: testId
                 };
-                
+
+                console.log(testDataGet);
+
                 var date = DateService.getDate();
                 TestsService.getAttempts(testDataGet).then(function(attemptData) {
                   var attempts = attemptData;
@@ -471,10 +472,17 @@ angular.module('mooc.controllers', ['ngSanitize'])
 
                   console.log(testData);
                   if (attempts === 0) {
-                    TestsService.createAttempt(testData);
+                    attempts ++;
+                    testData.attempts = attempts;
+                    TestsService.createAttempt(testData).then(function(createAttemptData) {
+                      console.log('Attempt created');
+                    });
                   } else {
                     attempts ++;
-                    TestsService.updateAttempt(testData);
+                    testData.attempts = attempts;
+                    TestsService.updateAttempt(testData).then(function(updateAttemptData) {
+                      console.log('Attempt updated');
+                    });
                   }
 
                   $ionicHistory.goBack();

@@ -107,12 +107,14 @@ app.factory('TestsService', function($http) {
       });
     },
     createAttempt: function(data) {
-      return $http.post(apiUrl + '/grade/', data).then(function(response) {
+      return $http.post(apiUrl + '/grade?test_id='+data.test_id+'&user_id='+data.user_id+'&grade='+data.grade+'&attemps='
+      +data.attempts+'&course_id='+data.course_id+'&date='+data.date).then(function(response) {
         return response.data;
       });
     },
     updateAttempt: function(data) {
-      return $http.put(apiUrl + '/grade/', data).then(function(response) {
+      return $http.put(apiUrl + '/grade?test_id='+data.test_id+'&user_id='+data.user_id+'&grade='+data.grade+'&attemps='
+      +data.attempts+'&course_id='+data.course_id+'&date='+data.date).then(function(response) {
         return response.data;
       });
     },
