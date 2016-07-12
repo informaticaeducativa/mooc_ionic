@@ -1,7 +1,6 @@
 <ion-view view-title="Evaluación">
   <ion-content>
     <ion-spinner ng-show="loading"></ion-spinner>
-
     <ul>
       <li ng-if="single" ng-repeat="single_question in single_questions">
         <h4 class="strong" ng-bind-html="single_question.questionText " >
@@ -29,7 +28,8 @@
           </li>
         </ul>
       </li>
-      <button class="button" type="submit" ng-click="submit()">Enviar</button>
+      <br/>
+      <button ng-show="!loading" class="button button-block button-positive" type="submit" ng-click="submit()">Enviar</button>
     </ul>
   </ion-content>
 </ion-view>
