@@ -348,13 +348,15 @@ angular.module('mooc.controllers', ['ngSanitize'])
     };
   })
   //
-  .controller('TestDetailCtrl', function($scope, $stateParams, TestsService, $ionicPopup, $ionicHistory) {
+  .controller('TestDetailCtrl', function($scope, $stateParams, TestsService,
+    $ionicPopup, $ionicHistory, auth, UsersService, DateService) {
 
     $scope.data = {};
     $scope.data2 = {};
+    var testId = $stateParams.testId;
 
     function refreshTest() {
-      TestsService.get($stateParams.testId).then(function(data) {
+      TestsService.get(testId).then(function(data) {
         $scope.test = data;
         console.log($scope.test);
       }).finally(function() {
@@ -367,9 +369,9 @@ angular.module('mooc.controllers', ['ngSanitize'])
     function refrestQuestions() {
       // Loading spinner starts
       $scope.loading = true;
-      TestsService.listQuestions($stateParams.testId).then(function(data){
+      TestsService.listQuestions(testId).then(function(data){
         questions = data;
-        console.log('questions by testId ' + $stateParams.testId + ': ' + questions);
+        console.log('questions by testId ' + testId + ': ' + questions);
 
         questions = questions.sort(function (a,b) {
           return a.id_pregunta - b.id_pregunta;
@@ -447,6 +449,20 @@ angular.module('mooc.controllers', ['ngSanitize'])
                 title: 'Resultado del Quiz',
                 template: 'Aciertos: ' + hits + '<br/>Nota: ' + grade + ' %'
               });
+
+              var userId = UsersService.getUserId(auth.profile.identities[0].user_id);
+              var date = DateService.getDate();
+              console.log('date: ' + date);
+
+              var testData = {
+                testId: testId,
+                userId: userId,
+                grade: grade,
+                attempts: attempts,
+                courseId: courseId
+              };
+
+              TestsService.createAttempt(testData)
 
               $ionicHistory.goBack();
 

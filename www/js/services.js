@@ -3,10 +3,16 @@ var app = angular.module('mooc.services', []);
 app.factory('UsersService', function($http) {
   var apiUrl = 'http://informaticaeducativaucc.com/api';
   return {
-    getUser: function(social_id) {
-      return $http.get(apiUrl + '/usuario/social/' + social_id)
+    getUser: function(socialId) {
+      return $http.get(apiUrl + '/usuario/social/' + socialId)
       .then(function(response) {
         return response.data[0];
+      });
+    },
+    getUserId: function(socialId) {
+      return $http.get(apiUrl + '/usuario/social/' + socialId)
+      .then(function(response) {
+        return response.data[0].id;
       });
     }
   };
@@ -16,8 +22,8 @@ app.factory('UserCoursesService', function($http) {
   var apiUrl = 'http://informaticaeducativaucc.com/api';
   return {
 
-    listUserCourses: function(user_id) {
-      return $http.get(apiUrl + '/curso_usuario/' + user_id)
+    listUserCourses: function(userId) {
+      return $http.get(apiUrl + '/curso_usuario/' + userId)
       .then(function(response) {
         return response.data;
       });
@@ -27,10 +33,6 @@ app.factory('UserCoursesService', function($http) {
       return $http.post(apiUrl + '/assign-course/', data)
       .then(function(response) {
         return response.data;
-        console.log(response);
-        console.log(response.data);
-        console.log('user_id: ' + user_id);
-        console.log('course_id: ' + course_id);
       });
     }
 
@@ -101,6 +103,43 @@ app.factory('TestsService', function($http) {
       return $http.get(apiUrl + '/questions?test_id='+ testId).then(function(response) {
         return response.data;
       });
+    },
+    createAttempt: function(data) {
+      return $http.post(apiUrl + '/grade/', data).then(function(response) {
+        return response.data;
+      });
+    },
+    updateAttempt: function(data) {
+      return $http.put(apiUrl + '/grade/'+ data).then(function(response) {
+        return response.data;
+      });
     }
   }
+})
+
+app.factory('DateService', function() {
+  return {
+    getDate: function() {
+      var dateObject = new Date();
+      var dateArray = [
+        dateObject.getFullYear().toString(),
+        ("0" + (dateObject.getMonth() + 1)).slice(-2),
+        dateObject.getDate().toString()
+      ];
+      dateArray = dateArray.join("-");
+      console.log('date: ' + dateArray);
+      var timeArray = [
+        ("0" + (dateObject.getHours())).slice(-2),
+        ("0" + (dateObject.getMinutes())).slice(-2),
+        ("0" + (dateObject.getSeconds())).slice(-2)
+      ];
+      timeArray = timeArray.join(":");
+      console.log('time: ' + timeArray);
+      date = dateArray + ' ' + timeArray;
+
+      return date;
+    }
+
+  }
+
 });
