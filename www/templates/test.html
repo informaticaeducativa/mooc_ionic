@@ -1,14 +1,35 @@
 <ion-view view-title="Evaluación">
-  <br/>
   <ion-content>
-    <ion-list>
-      <ion-item ng-repeat="multiple_question in multiple_questions">
-        <h3 ng-bind-html="multiple_question.question">{{multiple_question.question}}</h3>
-        <ion-radio ng-model="multiple_question.id" ng-value="a">A: {{multiple_question.a}}</ion-radio>
-        <ion-radio ng-model="multiple_question.id" ng-value="b">B: {{multiple_question.b}}</ion-radio>
-        <ion-radio ng-model="multiple_question.id" ng-value="c">C: {{multiple_question.c}}</ion-radio>
-        <ion-radio ng-model="multiple_question.id" ng-value="d">D: {{multiple_question.d}}</ion-radio>
-      </ion-item>
-    </ion-list>
+    <ion-spinner ng-show="loading"></ion-spinner>
+
+    <ul>
+      <li ng-if="single" ng-repeat="single_question in single_questions">
+        <h4 class="strong" ng-bind-html="single_question.questionText " >
+          {{ single_question.questionText }}
+        </h4>
+        <label class="item item-input">
+          <input type="text" ng-model="data2[$index]" name="quest_{{$parent.$index}}_single"
+          placeholder="Ingresa tu respuesta aquí" />
+        </label>
+        <!-- <h5>Selección: {{data2[$index]}}</h5> -->
+      </li>
+
+      <li ng-if="multiple" ng-repeat="question in multiple_questions">
+        <h4 class="strong" ng-bind-html="question.questionText " >
+          {{ question.questionText }}
+        </h4>
+        <!-- <h5>Selección: {{data[$index]}}</h5> -->
+        <ul>
+          <li ng-repeat="answer in question.options">
+            <ion-radio  ng-model="data[$parent.$index]"
+              ng-value="question.option_value[$index]"
+              name="quest_{{$parent.$index}}_options" >
+              {{ answer }}
+            </ion-radio>
+          </li>
+        </ul>
+      </li>
+      <button class="button" type="submit" ng-click="submit()">Enviar</button>
+    </ul>
   </ion-content>
 </ion-view>
