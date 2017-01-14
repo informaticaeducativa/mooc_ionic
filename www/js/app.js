@@ -8,8 +8,8 @@ angular.module('mooc', ['ionic', 'mooc.controllers', 'mooc.services',
     if (window.cordova && window.cordova.plugins.Keyboard) {
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
       cordova.plugins.Keyboard.disableScroll(true);
-
     }
+
     if (window.StatusBar) {
       StatusBar.styleDefault();
     }
@@ -18,7 +18,6 @@ angular.module('mooc', ['ionic', 'mooc.controllers', 'mooc.services',
 
 .config(function($stateProvider, $urlRouterProvider,
   authProvider, jwtInterceptorProvider, $httpProvider) {
-
 
     $stateProvider
 
@@ -131,7 +130,6 @@ angular.module('mooc', ['ionic', 'mooc.controllers', 'mooc.services',
       }
     });
 
-
     // if none of the above states are matched, use this as the fallback
     $urlRouterProvider.otherwise('/app/courses');
 
@@ -170,6 +168,5 @@ angular.module('mooc', ['ionic', 'mooc.controllers', 'mooc.services',
       }
 
     });
-
 
   });
