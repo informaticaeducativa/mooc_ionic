@@ -8,8 +8,8 @@ angular.module('mooc', ['ionic', 'mooc.controllers', 'mooc.services',
     if (window.cordova && window.cordova.plugins.Keyboard) {
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
       cordova.plugins.Keyboard.disableScroll(true);
-
     }
+
     if (window.StatusBar) {
       StatusBar.styleDefault();
     }
@@ -18,7 +18,6 @@ angular.module('mooc', ['ionic', 'mooc.controllers', 'mooc.services',
 
 .config(function($stateProvider, $urlRouterProvider,
   authProvider, jwtInterceptorProvider, $httpProvider) {
-
 
     $stateProvider
 
@@ -131,7 +130,6 @@ angular.module('mooc', ['ionic', 'mooc.controllers', 'mooc.services',
       }
     });
 
-
     // if none of the above states are matched, use this as the fallback
     $urlRouterProvider.otherwise('/app/courses');
 
@@ -143,8 +141,8 @@ angular.module('mooc', ['ionic', 'mooc.controllers', 'mooc.services',
     });
 
     jwtInterceptorProvider.tokenGetter = function(store, jwtHelper, auth) {
-      var idToken = store.get('token');
-      var refreshToken = store.get('refreshToken');
+      const idToken = store.get('token');
+      const refreshToken = store.get('refreshToken');
       if (!idToken || !refreshToken) {
         return null;
       }
@@ -163,13 +161,12 @@ angular.module('mooc', ['ionic', 'mooc.controllers', 'mooc.services',
   }).run(function($rootScope, auth, store) {
     $rootScope.$on('$locationChangeStart', function() {
       if (!auth.isAuthenticated) {
-        var token = store.get('token');
+        const token = store.get('token');
         if (token) {
           auth.authenticate(store.get('profile'), token);
         }
       }
 
     });
-
 
   });

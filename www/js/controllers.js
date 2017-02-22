@@ -1,3 +1,4 @@
+'use strict';
 angular.module('mooc.controllers', ['ngSanitize'])
 
 .controller('AppCtrl', function() {})
@@ -46,19 +47,22 @@ angular.module('mooc.controllers', ['ngSanitize'])
   $scope.auth = auth;
 
   function refreshUserCourses() {
+    let userCoursesTable = [];
+    let userCourseIds = [];
+    let courses = [];
+    $scope.userCourses = [];
     // For spinner's loading control
     $scope.loading = true;
     // getUser gets the user array of the authenticated user
     UsersService.getUser(auth.profile.identities[0].user_id)
     .then(function(data) {
-      var userId = data.id;
+      const userId = data.id;
       // List the courses owned by the authenticated user
       UserCoursesService.listUserCourses(userId)
       .then(function(data) {
         userCoursesTable = data;
-        userCourseIds = [];
         $scope.userCourses = [];
-        for (var i = 0; i < userCoursesTable.length; i++) {
+        for (let i = 0; i < userCoursesTable.length; i++) {
           userCourseIds[i] = userCoursesTable[i].id_curso;
         }
         // Sorts the Course IDs array
@@ -74,13 +78,15 @@ angular.module('mooc.controllers', ['ngSanitize'])
             return a.id_curso - b.id_curso;
           });
           // Loop that adds the course to the user
-          for (var i = 0; i < userCoursesTable.length; i++) {
+          console.time('Function #1');
+          for (let i = 0; i < userCoursesTable.length; i++) {
             if (courses[i].id_curso === userCourseIds[i]) {
               $scope.userCourses[i] = courses[i];
               // This field is for tracking the type of user (teacher, student)
               $scope.userCourses[i]['tipo_relacion'] = userCoursesTable[i].tipo_relacion;
             }
           }
+          console.timeEnd('Function #1');
         })
       })
 
@@ -116,8 +122,10 @@ angular.module('mooc.controllers', ['ngSanitize'])
 // Course Detail controller, for individual course view
 .controller('CourseDetailCtrl', function($scope, $stateParams, $state, auth,
   CoursesService, UsersService, UserCoursesService, $rootScope, $ionicHistory) {
-
+    console.log(auth);
     CoursesService.get($stateParams.courseId).then(function(data) {
+      let userCoursesTable = [];
+      const userCourseIds = [];
       $scope.course = data;
       // getUser gets the user array of the authenticated user
       UsersService.getUser(auth.profile.identities[0].user_id)
@@ -132,9 +140,8 @@ angular.module('mooc.controllers', ['ngSanitize'])
           UserCoursesService.listUserCourses($scope.user.id)
           .then(function(data) {
             userCoursesTable = data;
-            userCourseIds = [];
             $scope.ownCourse = false;
-            for (var i = 0; i < userCoursesTable.length; i++) {
+            for (let i = 0; i < userCoursesTable.length; i++) {
               userCourseIds[i] = userCoursesTable[i].id_curso;
               if ($stateParams.courseId == userCourseIds[i]) {
                 // If the user is registered in the selected course, $scope.ownCourse
@@ -150,7 +157,7 @@ angular.module('mooc.controllers', ['ngSanitize'])
         verifyOwnCourse();
         // This object stores the user_id and course_id for the registration of the user in
         // the selected course.
-        userCourseData = {
+        const userCourseData = {
           user_id: $scope.user.id,
           course_id: $scope.course.id_curso
         };
@@ -180,7 +187,7 @@ angular.module('mooc.controllers', ['ngSanitize'])
         // Array with temarios of the selected course
         $scope.temarios = data;
         $scope.courseTemarios = [];
-        for (var i = 0; i < $scope.temarios.length; i++) {
+        for (let i = 0; i < $scope.temarios.length; i++) {
           // Filling the courseTemarios array with the relevant data (title and content)
           $scope.courseTemarios[i] = {
             title: $scope.temarios[i].titulo,
@@ -217,6 +224,8 @@ angular.module('mooc.controllers', ['ngSanitize'])
     $scope.auth = auth;
 
     function refreshClasses() {
+      let classNames = [];
+      let id = [];
       // For spinner's loading control
       $scope.loading = true;
       // Lists the classes of the course selected
@@ -227,11 +236,9 @@ angular.module('mooc.controllers', ['ngSanitize'])
           return a.semana - b.semana;
         });
         $scope.courseClasses = [];
-        classNames = [];
-        id = [];
-        weekIndex = 1;
+        let weekIndex = 1;
         // Loop for filling the id, classNames and week in the courseClasses array
-        for (var i = 0; i < $scope.classes.length; i++) {
+        for (let i = 0; i < $scope.classes.length; i++) {
           // if week index (FK) at classes is equal to weekIndex, it executes the code below
           if ($scope.classes[i].semana == weekIndex) {
             classNames.push($scope.classes[i].nombre);
@@ -248,8 +255,8 @@ angular.module('mooc.controllers', ['ngSanitize'])
           // it will create a new array for week and classNames.
           else if ($scope.classes[i].semana == (weekIndex + 1)) {
             weekIndex ++;
-            classNames = new Array();
-            id = new Array();
+            classNames = [];
+            id = [];
             // Pushes the className for classes[i]
             classNames.push($scope.classes[i].nombre);
             // Pushes the id (week index) for classes[i]
@@ -285,7 +292,7 @@ angular.module('mooc.controllers', ['ngSanitize'])
 
     function refreshTests() {
       // courseID param, stored in the back view
-      courseId = $ionicHistory.backView().stateParams.courseId;
+      const courseId = $ionicHistory.backView().stateParams.courseId;
       // For spinner's loading control
       $scope.loading = true;
       // List the tests for the course and class selected
@@ -295,10 +302,10 @@ angular.module('mooc.controllers', ['ngSanitize'])
           return a.semana - b.semana;
         });
         $scope.courseTests = [];
-        testNames = [];
-        id = [];
-        weekIndex = 1;
-        for (var i = 0; i < $scope.tests.length; i++) {
+        let testNames = [];
+        let id = [];
+        let weekIndex = 1;
+        for (let i = 0; i < $scope.tests.length; i++) {
           if ($scope.tests[i].semana == weekIndex) {
             testNames.push($scope.tests[i].nombre);
             id.push($scope.tests[i].id_evaluacion);
@@ -309,8 +316,8 @@ angular.module('mooc.controllers', ['ngSanitize'])
             }
           } else if ($scope.tests[i].semana == (weekIndex + 1)) {
             weekIndex ++;
-            testNames = new Array();
-            id = new Array();
+            testNames = [];
+            id = [];
             testNames.push($scope.tests[i].nombre);
             id.push($scope.tests[i].id_evaluacion);
             $scope.courseTests[i] = {
@@ -326,10 +333,12 @@ angular.module('mooc.controllers', ['ngSanitize'])
         $scope.loading = false;
       });
       return $scope.courseTests;
+
+      console.log('course_id (backView): ' + courseId);
     }
     refreshTests();
 
-    console.log('course_id (backView): ' + courseId);
+
 
     $scope.toggleGroup = function(week) {
       if ($scope.isGroupShown(week)) {
@@ -346,10 +355,12 @@ angular.module('mooc.controllers', ['ngSanitize'])
   .controller('TestDetailCtrl', function($scope, $stateParams, TestsService,
     $ionicPopup, $ionicHistory, auth, UsersService, DateService) {
 
+    const courseId = $ionicHistory.backView().stateParams.courseId;
+
     $scope.data = {};
     $scope.data2 = {};
-    var testId = $stateParams.testId;
-    var userId = 0;
+    const testId = $stateParams.testId;
+    let userId = 0;
 
     function refreshTest() {
       TestsService.get(testId).then(function(data) {
@@ -363,6 +374,7 @@ angular.module('mooc.controllers', ['ngSanitize'])
     refreshTest();
 
     function refrestQuestions() {
+      let questions = [];
       // Loading spinner starts
       $scope.loading = true;
       TestsService.listQuestions(testId).then(function(data){
@@ -379,9 +391,9 @@ angular.module('mooc.controllers', ['ngSanitize'])
           $scope.single = false;
           $scope.single_questions = [];
           $scope.multiple_questions = [];
-          var j = 0;
-          var k = 0;
-          for (var i = 0;  i < questions.length; i++) {
+          let j = 0;
+          let k = 0;
+          for (let i = 0;  i < questions.length; i++) {
             if (questions[i].opcion_multiple == 'si') {
               $scope.multiple = true;
               $scope.multiple_questions[j] = {
@@ -396,8 +408,8 @@ angular.module('mooc.controllers', ['ngSanitize'])
                 option_value: ['a', 'b', 'c', 'd'],
                 answer: questions[i].respuesta
               };
-              console.log('answer: ' + $scope.multiple_questions[j].answer);
-              console.log('picked:' + $scope.data);
+              console.log('answer: ', $scope.multiple_questions[j].answer);
+              console.log('picked: ', $scope.data);
               j ++;
             } else {
               $scope.single = true;
@@ -406,31 +418,31 @@ angular.module('mooc.controllers', ['ngSanitize'])
                 questionText: questions[i].nombre,
                 answer: questions[i].respuesta
               };
-              console.log('single question: ' + $scope.single_questions[k].questionText);
-              console.log('single q answer: ' + $scope.single_questions[k].answer);
+              console.log('single question: ',  $scope.single_questions[k].questionText);
+              console.log('single q answer: ',  $scope.single_questions[k].answer);
               k ++;
             }
           }
 
           // if (single_questions.length > 0) { $scope.single = true }
 
-          var multipleQuestionsLength = $scope.multiple_questions.length;
-          var singleQuestionsLength = $scope.single_questions.length;
-          var questionsLength = questions.length;
+          const multipleQuestionsLength = $scope.multiple_questions.length;
+          const singleQuestionsLength = $scope.single_questions.length;
+          const questionsLength = questions.length;
 
           $scope.submit = function() {
-            var hits = 0;
+            let hits = 0;
             if (Object.keys($scope.data).length == multipleQuestionsLength
                 && Object.keys($scope.data2).length == singleQuestionsLength) {
               console.log($scope.data);
-              for (var i = 0; i < multipleQuestionsLength; i++) {
+              for (let i = 0; i < multipleQuestionsLength; i++) {
                 console.log('multiple q length: ' + multipleQuestionsLength);
                 if ($scope.multiple_questions[i].answer === $scope.data[i]) {
                   hits ++;
                 }
               }
               console.log($scope.data2);
-              for (var i = 0; i < singleQuestionsLength; i++) {
+              for (let i = 0; i < singleQuestionsLength; i++) {
                 console.log('single q length: ' + singleQuestionsLength);
                 console.log('data2[i]: ' + $scope.data2[i]);
                 if ($scope.single_questions[i].answer === $scope.data2[i]) {
@@ -438,10 +450,10 @@ angular.module('mooc.controllers', ['ngSanitize'])
                 }
               }
               console.log('asiertos: ' + hits);
-              var gradeFloat = ((hits/questionsLength)*100).toFixed(2);
-              var grade = Math.floor(gradeFloat);
+              let gradeFloat = ((hits/questionsLength)*100).toFixed(2);
+              let grade = Math.floor(gradeFloat);
 
-              var alertPopup = $ionicPopup.alert({
+              const alertPopup = $ionicPopup.alert({
                 title: 'Resultado del Quiz',
                 template: 'Aciertos: ' + hits + '<br/>Nota: ' + grade + ' %'
               });
@@ -450,24 +462,24 @@ angular.module('mooc.controllers', ['ngSanitize'])
               .then(function(userData) {
                 userId = userData;
 
-                var testDataGet = {
+                const testDataGet = {
                   user_id: userId,
                   test_id: testId
                 };
 
                 console.log(testDataGet);
 
-                var date = DateService.getDate();
+                // let date = DateService.getDate();
                 TestsService.getAttempts(testDataGet).then(function(attemptData) {
-                  var attempts = attemptData;
+                  let attempts = attemptData;
 
-                  var testData = {
+                  const testData = {
                     test_id: testId,
                     user_id: userId,
                     grade: grade,
                     attempts: attempts,
                     course_id: courseId,
-                    date: date
+                    date: DateService.getDate(),
                   };
 
                   console.log(testData);
