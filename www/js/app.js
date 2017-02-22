@@ -141,8 +141,8 @@ angular.module('mooc', ['ionic', 'mooc.controllers', 'mooc.services',
     });
 
     jwtInterceptorProvider.tokenGetter = function(store, jwtHelper, auth) {
-      var idToken = store.get('token');
-      var refreshToken = store.get('refreshToken');
+      const idToken = store.get('token');
+      const refreshToken = store.get('refreshToken');
       if (!idToken || !refreshToken) {
         return null;
       }
@@ -161,7 +161,7 @@ angular.module('mooc', ['ionic', 'mooc.controllers', 'mooc.services',
   }).run(function($rootScope, auth, store) {
     $rootScope.$on('$locationChangeStart', function() {
       if (!auth.isAuthenticated) {
-        var token = store.get('token');
+        const token = store.get('token');
         if (token) {
           auth.authenticate(store.get('profile'), token);
         }

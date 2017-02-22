@@ -1,7 +1,7 @@
 const app = angular.module('mooc.services', []);
 
 app.factory('UsersService', function($http) {
-  const apiUrl = 'http://http://mooc-roadev.rhcloud.com/api';
+  const apiUrl = 'http://moocucc-roadev.rhcloud.com/api';
   return {
     getUser: function(socialId) {
       return $http.get(apiUrl + '/usuario/social/' + socialId)
@@ -21,7 +21,7 @@ app.factory('UsersService', function($http) {
 });
 
 app.factory('UserCoursesService', function($http) {
-  const apiUrl = 'http://mooc-roadev.rhcloud.com/api';
+  const apiUrl = 'http://moocucc-roadev.rhcloud.com/api';
   return {
 
     listUserCourses: function(userId) {
@@ -43,7 +43,7 @@ app.factory('UserCoursesService', function($http) {
 
 app.factory('CoursesService', function($http) {
 
-  const apiUrl = 'http://mooc-roadev.rhcloud.com/api';
+  const apiUrl = 'http://moocucc-roadev.rhcloud.com/api';
 
   return {
     list: function() {
@@ -73,7 +73,7 @@ app.factory('CoursesService', function($http) {
 });
 
 app.factory('ClassesService', function($http) {
-  const apiUrl = 'http://mooc-roadev.rhcloud.com/api';
+  const apiUrl = 'http://moocucc-roadev.rhcloud.com/api';
   return {
     list: function(courseId) {
       return $http.get(apiUrl + '/classes?course_id=' + courseId).then(function(response) {
@@ -89,7 +89,7 @@ app.factory('ClassesService', function($http) {
 });
 
 app.factory('TestsService', function($http) {
-  const apiUrl = 'http://mooc-roadev.rhcloud.com/api';
+  const apiUrl = 'http://moocucc-roadev.rhcloud.com/api';
   return {
     list: function(courseId) {
       return $http.get(apiUrl + '/tests?course_id=' + courseId).then(function(response) {
@@ -121,7 +121,7 @@ app.factory('TestsService', function($http) {
     getAttempts: function(data) {
       return $http.get(apiUrl + '/grade?user_id=' + data.user_id + '&test_id=' + data.test_id)
       .then(function(response) {
-        const attempts = 0;
+        let attempts = 0;
         if (response.data.length > 0) {
           attempts = response.data[0].intentos;
           return attempts;
@@ -129,7 +129,7 @@ app.factory('TestsService', function($http) {
           attempts = 0;
           return attempts;
         }
-        console.log('intentos: ' + attempts);
+        console.log('intentos: ', attempts);
       });
     }
   }
@@ -139,23 +139,22 @@ app.factory('DateService', function() {
   return {
     getDate: function() {
       const dateObject = new Date();
-      const dateArray = [
+      let dateArray = [
         dateObject.getFullYear().toString(),
         ('0' + (dateObject.getMonth() + 1)).slice(-2),
         dateObject.getDate().toString()
       ];
       dateArray = dateArray.join('-');
-      console.log('date: ' + dateArray);
-      const timeArray = [
+      console.log('date: ', dateArray);
+      let timeArray = [
         ('0' + (dateObject.getHours())).slice(-2),
         ('0' + (dateObject.getMinutes())).slice(-2),
         ('0' + (dateObject.getSeconds())).slice(-2)
       ];
       timeArray = timeArray.join(':');
-      console.log('time: ' + timeArray);
-      date = dateArray + ' ' + timeArray;
+      console.log('time: ', timeArray);
 
-      return date;
+      return dateArray + ' ' + timeArray;;
     }
 
   }
