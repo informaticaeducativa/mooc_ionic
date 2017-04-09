@@ -3,13 +3,13 @@ const app = angular.module('mooc.services', []);
 app.factory('UsersService', function($http) {
   const apiUrl = 'http://moocucc-roadev.rhcloud.com/api';
   return {
-    getUser: function(socialId) {
+    getUser: (socialId) => {
       return $http.get(apiUrl + '/usuario/social/' + socialId)
       .then(function(response) {
         return response.data[0];
       });
     },
-    getUserId: function(socialId) {
+    getUserId: (socialId) => {
       return $http.get(apiUrl + '/usuario/social/' + socialId)
       .then(function(response) {
         const userId = response.data[0].id;
@@ -24,16 +24,16 @@ app.factory('UserCoursesService', function($http) {
   const apiUrl = 'http://moocucc-roadev.rhcloud.com/api';
   return {
 
-    listUserCourses: function(userId) {
+    listUserCourses: (userId) => {
       return $http.get(apiUrl + '/curso_usuario/' + userId)
       .then(function(response) {
         return response.data;
       });
     },
 
-    createUserCourse: function(data) {
+    createUserCourse: (data) => {
       return $http.post(apiUrl + '/assign-course/', data)
-      .then(function(response) {
+      .then((response) => {
         return response.data;
       });
     }
@@ -41,29 +41,29 @@ app.factory('UserCoursesService', function($http) {
   };
 });
 
-app.factory('CoursesService', function($http) {
+app.factory('CoursesService', ($http) => {
 
   const apiUrl = 'http://moocucc-roadev.rhcloud.com/api';
 
   return {
-    list: function() {
-      return $http.get(apiUrl + '/cursos/').then(function(response) {
+    list: () => {
+      return $http.get(apiUrl + '/cursos/').then((response) => {
         return response.data;
       });
     },
-    get: function(courseId) {
-      return $http.get(apiUrl + '/curso/' + courseId).then(function(response) {
+    get: (courseId) => {
+      return $http.get(apiUrl + '/curso/' + courseId).then((response) => {
         return response.data[0];
       });
     },
-    listCourseTemarios: function(courseId) {
+    listCourseTemarios: (courseId) => {
       return $http.get(apiUrl + '/temarios?id_curso=' + courseId + '&tipo_contenido=info_curso')
       .then(function(response) {
         return response.data;
       });
     },
-    getTemario: function(temarioId) {
-      return $http.get(apiUrl + '/temario/' + temarioId).then(function(response) {
+    getTemario: (temarioId) => {
+      return $http.get(apiUrl + '/temario/' + temarioId).then((response) => {
         return response.data;
       });
     },
@@ -75,13 +75,13 @@ app.factory('CoursesService', function($http) {
 app.factory('ClassesService', function($http) {
   const apiUrl = 'http://moocucc-roadev.rhcloud.com/api';
   return {
-    list: function(courseId) {
+    list: (courseId) => {
       return $http.get(apiUrl + '/classes?course_id=' + courseId).then(function(response) {
         return response.data;
       });
     },
-    get: function(classId) {
-      return $http.get(apiUrl + '/class/' + classId).then(function(response) {
+    get: (classId) => {
+      return $http.get(apiUrl + '/class/' + classId).then((response) => {
         return response.data[0];
       });
     }
@@ -91,43 +91,40 @@ app.factory('ClassesService', function($http) {
 app.factory('TestsService', function($http) {
   const apiUrl = 'http://moocucc-roadev.rhcloud.com/api';
   return {
-    list: function(courseId) {
-      return $http.get(apiUrl + '/tests?course_id=' + courseId).then(function(response) {
+    list: (courseId) => {
+      return $http.get(apiUrl + '/tests?course_id=' + courseId).then((response) => {
         return response.data;
       });
     },
-    get: function(testId) {
-      return $http.get(apiUrl + '/test/' + testId).then(function(response) {
+    get: (testId) => {
+      return $http.get(apiUrl + '/test/' + testId).then((response) => {
         return response.data[0];
       });
     },
-    listQuestions: function(testId) {
-      return $http.get(apiUrl + '/questions?test_id='+ testId).then(function(response) {
+    listQuestions: (testId) => {
+      return $http.get(apiUrl + '/questions?test_id='+ testId).then((response) => {
         return response.data;
       });
     },
-    createAttempt: function(data) {
-      return $http.post(apiUrl + '/grade?test_id='+data.test_id+'&user_id='+data.user_id+'&grade='+data.grade+'&attemps='
-      +data.attempts+'&course_id='+data.course_id+'&date='+data.date).then(function(response) {
+    createAttempt: (data) => {
+      return $http.post(apiUrl + '/grade?test_id=' + data.test_id + '&user_id=' + data.user_id + '&grade='+ data.grade + '&attemps='
+      + data.attempts+'&course_id='+data.course_id+'&date='+data.date).then((response) => {
         return response.data;
       });
     },
-    updateAttempt: function(data) {
+    updateAttempt: (data) => {
       return $http.put(apiUrl + '/grade?test_id='+data.test_id+'&user_id='+data.user_id+'&grade='+data.grade+'&attemps='
-      +data.attempts+'&course_id='+data.course_id+'&date='+data.date).then(function(response) {
+      +data.attempts+'&course_id='+data.course_id+'&date='+data.date).then((response) => {
         return response.data;
       });
     },
-    getAttempts: function(data) {
+    getAttempts: (data) => {
       return $http.get(apiUrl + '/grade?user_id=' + data.user_id + '&test_id=' + data.test_id)
-      .then(function(response) {
-        let attempts = 0;
+      .then((response) => {
         if (response.data.length > 0) {
-          attempts = response.data[0].intentos;
-          return attempts;
+          return response.data[0].intentos;
         } else {
-          attempts = 0;
-          return attempts;
+          return 0;
         }
         console.log('intentos: ', attempts);
       });
@@ -137,24 +134,20 @@ app.factory('TestsService', function($http) {
 
 app.factory('DateService', function() {
   return {
-    getDate: function() {
+    getDate: () => {
       const dateObject = new Date();
-      let dateArray = [
+      const dateArray = [
         dateObject.getFullYear().toString(),
         ('0' + (dateObject.getMonth() + 1)).slice(-2),
         dateObject.getDate().toString()
       ];
-      dateArray = dateArray.join('-');
-      console.log('date: ', dateArray);
-      let timeArray = [
+      const timeArray = [
         ('0' + (dateObject.getHours())).slice(-2),
         ('0' + (dateObject.getMinutes())).slice(-2),
         ('0' + (dateObject.getSeconds())).slice(-2)
       ];
-      timeArray = timeArray.join(':');
-      console.log('time: ', timeArray);
 
-      return dateArray + ' ' + timeArray;;
+      return _.join(dateArray, '-') + ' ' + _.join(timeArray, ':');
     }
 
   }
