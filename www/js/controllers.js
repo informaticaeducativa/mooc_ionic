@@ -17,13 +17,13 @@ angular.module('mooc.controllers', ['ngSanitize'])
     $scope.loading = true;
     // getUser gets the user array of the authenticated user
     UsersService.getUser(auth.profile.identities[0].user_id)
-    .then(function(data) {
+    .then((data) => {
       // Current authenticated used data object
       $scope.user = data;
       // Displaying in console the user's id
       console.log('user: ' + $scope.user.id);
     })
-    .finally(function(){
+    .finally(() => {
       // Stops the loading spinner
       $scope.loading = false;
     });
@@ -55,11 +55,11 @@ angular.module('mooc.controllers', ['ngSanitize'])
     $scope.loading = true;
     // getUser gets the user array of the authenticated user
     UsersService.getUser(auth.profile.identities[0].user_id)
-    .then(function(data) {
+    .then((data) => {
       const userId = data.id;
       // List the courses owned by the authenticated user
       UserCoursesService.listUserCourses(userId)
-      .then(function(data) {
+      .then((data) => {
         userCoursesTable = data;
         $scope.userCourses = [];
         for (let i = 0; i < userCoursesTable.length; i++) {
@@ -67,14 +67,11 @@ angular.module('mooc.controllers', ['ngSanitize'])
         }
         // Sorts the Course IDs array
         userCourseIds = userCourseIds.sort();
-        CoursesService.list().then(function(data) {
-          courses = data;
+        CoursesService.list().then((data) => {
           // Sorts the courses by course id
-          courses = courses.sort(function (a,b) {
-            return a.id_curso - b.id_curso;
-          });
+          const courses = _.sortBy(data, id_curso);
           // Sorts the courses by course id
-          userCoursesTable = userCoursesTable.sort(function (a,b) {
+          userCoursesTable = userCoursesTable.sort((a, b) => {
             return a.id_curso - b.id_curso;
           });
           // Loop that adds the course to the user
@@ -90,7 +87,7 @@ angular.module('mooc.controllers', ['ngSanitize'])
         })
       })
 
-    }).finally(function() {
+    }).finally(() => {
       // after request is done, spinner will disappear
       $scope.loading = false;
     });
@@ -99,20 +96,22 @@ angular.module('mooc.controllers', ['ngSanitize'])
   refreshUserCourses();
 })
 // Courses controller - General View
-.controller('CoursesCtrl', function($scope, CoursesService, auth, $state, UserCoursesService, $ionicHistory) {
+.controller('CoursesCtrl', function($scope, CoursesService, $state, UserCoursesService, $ionicHistory) {
   // This scope is used for conditional items (relationed with authentication) in the view
-  $scope.auth = auth;
 
   function refreshCourses() {
     // For spinner's loading control
-    $scope.loading = true;
+    const loading = true;
+    _.assign($scope, { loading });
     // CoursesService.list() lists all the courses from the backend
-    CoursesService.list().then(function(data) {
+    CoursesService.list().then((data) => {
       // The courses are stored in $scope.courses
-      $scope.courses = data;
-    }).finally(function() {
+      const courses = data;
+      _.assign($scope, { courses });
+    }).finally(() => {
       // after request is done, spinner will disappear
-      $scope.loading = false;
+      const loading = false;
+      _.assign($scope, { loading } );
     });
     return $scope.courses;
   }
@@ -122,59 +121,63 @@ angular.module('mooc.controllers', ['ngSanitize'])
 // Course Detail controller, for individual course view
 .controller('CourseDetailCtrl', function($scope, $stateParams, $state, auth,
   CoursesService, UsersService, UserCoursesService, $rootScope, $ionicHistory) {
-    console.log(auth);
-    CoursesService.get($stateParams.courseId).then(function(data) {
+    CoursesService.get($stateParams.courseId).then((data) => {
       let userCoursesTable = [];
       const userCourseIds = [];
       $scope.course = data;
       // getUser gets the user array of the authenticated user
-      UsersService.getUser(auth.profile.identities[0].user_id)
-      .then(function(data) {
-        // Loading spinner starts
-        $scope.loading = true;
-        // user object is stored in $scope.user
-        $scope.user = data;
-        // With this function, we verify if the authenticated user is registered in the
-        // selected course
-        function verifyOwnCourse() {
-          UserCoursesService.listUserCourses($scope.user.id)
-          .then(function(data) {
-            userCoursesTable = data;
-            $scope.ownCourse = false;
-            for (let i = 0; i < userCoursesTable.length; i++) {
-              userCourseIds[i] = userCoursesTable[i].id_curso;
-              if ($stateParams.courseId == userCourseIds[i]) {
-                // If the user is registered in the selected course, $scope.ownCourse
-                // is set to true. We use this in the view for validate if the button
-                // for registration to the course appers or the button for the view of
-                // course contents
-                $scope.ownCourse = true;
+      if(auth.isAuthenticated) {
+        UsersService.getUser(_.get(auth.profile.identities[0], user_id))
+        .then((data) => {
+          // Loading spinner starts
+          $scope.loading = true;
+          // user object is stored in $scope.user
+          $scope.user = data;
+          // With this function, we verify if the authenticated user is registered in the
+          // selected course
+          function verifyOwnCourse() {
+            UserCoursesService.listUserCourses($scope.user.id)
+            .then((data) => {
+              userCoursesTable = data;
+              $scope.ownCourse = false;
+              for (let i = 0; i < userCoursesTable.length; i++) {
+                userCourseIds[i] = userCoursesTable[i].id_curso;
+                if ($stateParams.courseId == userCourseIds[i]) {
+                  // If the user is registered in the selected course, $scope.ownCourse
+                  // is set to true. We use this in the view for validate if the button
+                  // for registration to the course appers or the button for the view of
+                  // course contents
+                  $scope.ownCourse = true;
+                }
               }
-            }
-          })
-        }
+            })
+          }
 
-        verifyOwnCourse();
-        // This object stores the user_id and course_id for the registration of the user in
-        // the selected course.
-        const userCourseData = {
-          user_id: $scope.user.id,
-          course_id: $scope.course.id_curso
-        };
+          verifyOwnCourse();
+          // This object stores the user_id and course_id for the registration of the user in
+          // the selected course.
+          const userCourseData = {
+            user_id: $scope.user.id,
+            course_id: $scope.course.id_curso,
+          };
 
-        $scope.save = function() {
-          UserCoursesService.createUserCourse(userCourseData)
-          .then(function() {
-            $state.go('app.own-courses');
-          });
-        };
+          $scope.save = () => {
+            UserCoursesService.createUserCourse(userCourseData)
+            .then(function() {
+              $state.go('app.own-courses');
+            });
+          };
 
-      }).finally(function() {
-        // after request is done, spinner will disappear
-        $scope.loading = false;
-      });
+        }).finally(() => {
+          // after request is done, spinner will disappear
+          $scope.loading = false;
+        });
+      }
+
 
     });
+
+    ///
 
     function refreshTemarios() {
 
@@ -183,7 +186,7 @@ angular.module('mooc.controllers', ['ngSanitize'])
       // listCourseTemarios retrieves the topics (title and content)
       // information for the selected course
       CoursesService.listCourseTemarios($stateParams.courseId)
-      .then(function(data) {
+      .then((data) => {
         // Array with temarios of the selected course
         $scope.temarios = data;
         $scope.courseTemarios = [];
@@ -195,7 +198,7 @@ angular.module('mooc.controllers', ['ngSanitize'])
           };
         }
 
-      }).finally(function() {
+      }).finally(() => {
         // after request is done, spinner will disappear
         $scope.loading = false;
       });
@@ -206,14 +209,14 @@ angular.module('mooc.controllers', ['ngSanitize'])
     * if given group is the selected group, deselect it
     * else, select the given group
     */
-    $scope.toggleGroup = function(title) {
+    $scope.toggleGroup = (title) => {
       if ($scope.isGroupShown(title)) {
         $scope.shownGroup = null;
       } else {
         $scope.shownGroup = title;
       }
     };
-    $scope.isGroupShown = function(title) {
+    $scope.isGroupShown = (title) => {
       return $scope.shownGroup === title;
     };
 
@@ -229,7 +232,7 @@ angular.module('mooc.controllers', ['ngSanitize'])
       // For spinner's loading control
       $scope.loading = true;
       // Lists the classes of the course selected
-      ClassesService.list($stateParams.courseId).then(function(data) {
+      ClassesService.list($stateParams.courseId).then((data) => {
         $scope.classes = data;
         // Saves the classes sorted by id in $scope.classes
         $scope.classes = $scope.classes.sort(function (a,b) {
@@ -400,7 +403,7 @@ angular.module('mooc.controllers', ['ngSanitize'])
                 id: questions[i].id_pregunta,
                 questionText: questions[i].nombre,
                 options: [
-                  questions[i].opcion_a,
+                  _.get(questions[i], opcion_a),
                   questions[i].opcion_b,
                   questions[i].opcion_c,
                   questions[i].opcion_d
