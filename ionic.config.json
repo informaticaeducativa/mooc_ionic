@@ -2,6 +2,7 @@
   "name": "MOOC UCC",
   "app_id": "",
   "gulpStartupTasks": [
+    "babel",
     "sass",
     "watch"
   ],
